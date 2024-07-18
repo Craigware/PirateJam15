@@ -1,9 +1,50 @@
-[gd_scene load_steps=2 format=3 uid="uid://unql83c45yjx"]
+[gd_scene load_steps=7 format=3 uid="uid://unql83c45yjx"]
 
 [ext_resource type="Script" path="res://Scripts/GameState.gd" id="1_ceq5v"]
+[ext_resource type="Script" path="res://Scripts/fps.gd" id="2_4qlrq"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_06nx3"]
+size = Vector2(10, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mvqg6"]
+albedo_color = Color(0.123188, 0.328507, 0.445691, 1)
+
+[sub_resource type="QuadMesh" id="QuadMesh_a1ep5"]
+material = SubResource("StandardMaterial3D_mvqg6")
+size = Vector2(10, 1)
+
+[sub_resource type="QuadMesh" id="QuadMesh_wwoxf"]
 
 [node name="Main" type="Node3D"]
 script = ExtResource("1_ceq5v")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2)
+transform = Transform3D(1.00599, 0, 0, 0, 1.00599, 0, 0, 0, 1.00599, 0, 0, 2.43937)
+projection = 1
+current = true
+
+[node name="EntityContainer" type="Node" parent="."]
+
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+offset_right = 581.0
+offset_bottom = 376.0
+text = "FPS"
+script = ExtResource("2_4qlrq")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+
+[node name="BottomPanel" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.583659, 1)
+mesh = SubResource("QuadMesh_06nx3")
+
+[node name="BottomPanel2" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.969251, 0, 0, 0, 0.969251, 0, 0, 0, 0.969251, 0, 0.0775196, -1)
+mesh = SubResource("QuadMesh_a1ep5")
+
+[node name="Curtain" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.23144, 0.00574341, -0.000664473)
+mesh = SubResource("QuadMesh_wwoxf")
+
+[node name="Curtain2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.17865, 0.00574341, -0.000664473)
+mesh = SubResource("QuadMesh_wwoxf")
