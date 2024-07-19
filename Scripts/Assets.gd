@@ -4,12 +4,15 @@ class_name Assets;
 enum Sprites {
 	NIL     = 0,
     PLAYER  = 1,
-	GHOUL   = 2,
+    CAULDRON = 2,
+	GHOUL   = 3,
 	MAX
 };
 
 static var Images : Array = [
 	load("res://Assets/MissingTexture.png"),
+    load("res://Assets/Player.png"),
+    load("res://Assets/Cauldron.png")
 ];
 
 enum ItemType {

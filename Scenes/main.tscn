@@ -17,6 +17,7 @@ size = Vector2(10, 1)
 
 [node name="Main" type="Node3D"]
 script = ExtResource("1_ceq5v")
+metadata/_edit_horizontal_guides_ = [-110.0]
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1.00599, 0, 0, 0, 1.00599, 0, 0, 0, 1.00599, 0, 0, 2.43937)
@@ -24,12 +25,6 @@ projection = 1
 current = true
 
 [node name="EntityContainer" type="Node" parent="."]
-
-[node name="RichTextLabel" type="RichTextLabel" parent="."]
-offset_right = 581.0
-offset_bottom = 376.0
-text = "FPS"
-script = ExtResource("2_4qlrq")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 
@@ -48,3 +43,137 @@ mesh = SubResource("QuadMesh_wwoxf")
 [node name="Curtain2" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.17865, 0.00574341, -0.000664473)
 mesh = SubResource("QuadMesh_wwoxf")
+
+[node name="HUD" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="HUD"]
+layout_mode = 0
+offset_right = 581.0
+offset_bottom = 376.0
+text = "FPS"
+script = ExtResource("2_4qlrq")
+
+[node name="HUD" type="VBoxContainer" parent="HUD"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -128.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Inventory" type="HBoxContainer" parent="HUD/HUD"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Essence" type="HBoxContainer" parent="HUD/HUD/Inventory"]
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 4
+theme_override_constants/separation = 12
+
+[node name="ColorRect" type="ColorRect" parent="HUD/HUD/Inventory/Essence"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_vertical = 8
+
+[node name="ColorRect2" type="ColorRect" parent="HUD/HUD/Inventory/Essence"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_vertical = 8
+
+[node name="ColorRect3" type="ColorRect" parent="HUD/HUD/Inventory/Essence"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_vertical = 8
+
+[node name="ColorRect4" type="ColorRect" parent="HUD/HUD/Inventory/Essence"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_vertical = 8
+
+[node name="ColorRect5" type="ColorRect" parent="HUD/HUD/Inventory/Essence"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_vertical = 8
+
+[node name="ColorRect6" type="ColorRect" parent="HUD/HUD/Inventory/Essence"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_vertical = 8
+
+[node name="Items" type="HBoxContainer" parent="HUD/HUD/Inventory"]
+layout_mode = 2
+size_flags_horizontal = 6
+theme_override_constants/separation = -4
+
+[node name="ColorRect" type="ColorRect" parent="HUD/HUD/Inventory/Items"]
+custom_minimum_size = Vector2(96, 128)
+layout_mode = 2
+
+[node name="ColorRect" type="ColorRect" parent="HUD/HUD/Inventory/Items/ColorRect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 80.0
+offset_right = 80.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.608618, 0.4444, 0.4444, 1)
+
+[node name="ColorRect2" type="ColorRect" parent="HUD/HUD/Inventory/Items"]
+custom_minimum_size = Vector2(96, 128)
+layout_mode = 2
+
+[node name="ColorRect" type="ColorRect" parent="HUD/HUD/Inventory/Items/ColorRect2"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 80.0
+offset_right = 80.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.608618, 0.4444, 0.4444, 1)
+
+[node name="ColorRect3" type="ColorRect" parent="HUD/HUD/Inventory/Items"]
+custom_minimum_size = Vector2(96, 128)
+layout_mode = 2
+
+[node name="ColorRect" type="ColorRect" parent="HUD/HUD/Inventory/Items/ColorRect3"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 80.0
+offset_right = 80.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.608618, 0.4444, 0.4444, 1)
+
+[node name="ColorRect4" type="ColorRect" parent="HUD/HUD/Inventory/Items"]
+custom_minimum_size = Vector2(96, 128)
+layout_mode = 2
+
+[node name="ColorRect" type="ColorRect" parent="HUD/HUD/Inventory/Items/ColorRect4"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 80.0
+offset_right = 80.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.608618, 0.4444, 0.4444, 1)
+
+[node name="ColorRect5" type="ColorRect" parent="HUD/HUD/Inventory/Items"]
+custom_minimum_size = Vector2(96, 128)
+layout_mode = 2

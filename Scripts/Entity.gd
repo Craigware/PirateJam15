@@ -10,7 +10,8 @@ enum EntityArchs {
 	NIL,
 	PLAYER,
 	CAULDRON,
-	GHOUL
+	GHOUL,
+	PEDESTRIAN
 }
 
 @export var Health: int;
@@ -21,6 +22,9 @@ enum EntityArchs {
 @export var SwaySpeed : float;
 @export var SwayArc : float;
 @export var EntityArch : EntityArchs;
+@export var ItemDropID : Assets.ItemType;
+@export var IsCrafting : bool;
+@export var MeshSize : Vector2 = Vector2(2,2);
 
 var AppliedEssence : Dictionary = {Assets.Items[Assets.ItemType.NIL]: 1};
 
@@ -36,9 +40,14 @@ var startingY;
 
 func _ready() -> void:
 	var material = StandardMaterial3D.new();
+	$SpriteMesh.mesh = $SpriteMesh.mesh.duplicate();
+	material = StandardMaterial3D.new();
 	material.albedo_texture = Sprite;
 	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED;
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR;
 	$SpriteMesh.mesh.material = material;
+	$SpriteMesh.mesh.size = MeshSize;
+
 	startingY = position.y;
 
 	if CraftingTimer != null:
@@ -83,6 +92,7 @@ func apply_essence(item: Item) -> void:
 
 func begin_crafting() -> void:
 	CraftingTimer.start();
+	IsCrafting = true;
 	return;
 
 
@@ -128,4 +138,6 @@ func finish_crafting() -> void:
 
 func die() -> void:
 	queue_free();
+	# if Entities[entityId].ItemDropID != null:
+	# 	add_item_to_inventory(Entities[entityId].ItemDropID);
 	return;
