@@ -57,18 +57,19 @@ func _ready() -> void:
 	return;
 
 
-func _process(delta: float) -> void:
+#Some reason if this is process the movement glitches out and stops, physics seems to fix this
+func _physics_process(delta: float) -> void:
 	#Implement more human movement later, more imperfections
 	#lerp this later
 	if MovePattern == MovementPattern.SWAY:
 		rotate_z(SwaySpeed * delta * direction);
-		if rotation.z > SwayArc or rotation.z < -SwayArc:
-				direction *= -1
+		if rotation.z >= SwayArc or rotation.z <= -SwayArc:
+			direction *= -1
 
 	# This gets stuck sometimes for some reason
 	if MovePattern == MovementPattern.BOUNCE:
 		position += Vector3(0, SwaySpeed * delta * direction, 0);
-		if position.y > startingY + SwayArc or position.y < startingY - SwayArc:
+		if position.y >= startingY + SwayArc or position.y <= startingY - SwayArc:
 			direction *= -1;
 
 

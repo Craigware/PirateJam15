@@ -40,7 +40,6 @@ var DaylightTimer : Timer;
 var CloudStateTimer : Timer;
 var ShadowStateTimer : Timer;
 
-# Might think of a better way of doing this but this is fine for now.
 var AggrodArchitypes : Array = [
 	false,
 	false,
@@ -52,19 +51,22 @@ var AggrodArchitypes : Array = [
 @onready var EntityContainer : Node = $EntityContainer;
 
 func _process(_delta: float) -> void:
-	var isCrafting = false;
+	var _isCrafting = false;
 	for i in range(Entities.size()):
 		if Entities[i] == null: continue;
 		if Entities[i].IsAlly && Entities[i].IsCrafting:
-			isCrafting = true;
+			_isCrafting = true;
 	pass
 
-func _ready() -> void:
+func start_game() -> void:
 	Entities.resize(ENTITY_LIMIT);
 	Entities.fill(null);
 	create_player();
 	create_cauldron();
-	
+	create_enemy(1);
+	create_enemy(1);
+	create_enemy(1);
+
 	DaylightTimer = Timer.new();
 	DaylightTimer.wait_time = 75;
 	DaylightTimer.timeout.connect(update_day_state);
@@ -115,10 +117,6 @@ func remove_entity(entityId: int) -> void:
 
 
 func get_random_spawn_location(isAlly: bool) -> Vector3:
-	# x should be between -.8 and .8 (place based off if they are an ally)
-	# y should be between -2.15 and -1.6
-	# z can be random between 2 arbitrary values as long as they are behind the front panel and infront of the background
-
 	var x;
 	if isAlly:
 		x = randf_range(-.8, 0);
@@ -180,6 +178,22 @@ func create_cauldron():
 
 
 func create_enemy(_architype) -> bool:
+	var _entity = create_entity();
+	var resource_id = Assets.Sprites.GHOUL;
+	if resource_id > Assets.Images.size()-1: 
+		resource_id = Assets.Sprites.NIL;
+
+	_entity.Sprite = Assets.Images[resource_id];
+	_entity.Health = 10;
+	_entity.EntityArch = Entity.EntityArchs.GHOUL;
+	_entity.IsAlly = false;
+	_entity.position = get_random_spawn_location(_entity.IsAlly);
+	_entity.MovePattern = Entity.MovementPattern.SWAY;
+	_entity.SwayArc = 0.05;
+	_entity.SwaySpeed = 0.1;
+	_entity.MeshSize = Vector2(2,3);
+
+	EntityContainer.add_child(_entity);
 	return false;
 
 

@@ -1,7 +1,12 @@
-[gd_scene load_steps=7 format=3 uid="uid://unql83c45yjx"]
+[gd_scene load_steps=16 format=3 uid="uid://unql83c45yjx"]
 
 [ext_resource type="Script" path="res://Scripts/GameState.gd" id="1_ceq5v"]
 [ext_resource type="Script" path="res://Scripts/fps.gd" id="2_4qlrq"]
+[ext_resource type="Texture2D" uid="uid://bs72tvei3084k" path="res://Assets/CurtainLeft.png" id="2_o4gkj"]
+[ext_resource type="Texture2D" uid="uid://bmydv1isopef3" path="res://Assets/CurtainRight.png" id="3_5s46d"]
+[ext_resource type="PackedScene" uid="uid://u7qrbi46tpre" path="res://Scenes/card.tscn" id="3_rhv20"]
+[ext_resource type="Script" path="res://Scripts/main_menu.gd" id="4_3oj26"]
+[ext_resource type="Script" path="res://Scripts/game_over.gd" id="4_lfiit"]
 
 [sub_resource type="QuadMesh" id="QuadMesh_06nx3"]
 size = Vector2(10, 0.5)
@@ -13,7 +18,27 @@ albedo_color = Color(0.123188, 0.328507, 0.445691, 1)
 material = SubResource("StandardMaterial3D_mvqg6")
 size = Vector2(10, 1)
 
-[sub_resource type="QuadMesh" id="QuadMesh_wwoxf"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qx5d0"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_j5tdo"]
+transparency = 2
+alpha_scissor_threshold = 0.5
+alpha_antialiasing_mode = 0
+albedo_texture = ExtResource("2_o4gkj")
+
+[sub_resource type="QuadMesh" id="QuadMesh_yrvcw"]
+material = SubResource("StandardMaterial3D_j5tdo")
+size = Vector2(1, 2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_170pj"]
+transparency = 2
+alpha_scissor_threshold = 0.5
+alpha_antialiasing_mode = 0
+albedo_texture = ExtResource("3_5s46d")
+
+[sub_resource type="QuadMesh" id="QuadMesh_vfx06"]
+material = SubResource("StandardMaterial3D_170pj")
+size = Vector2(1, 2)
 
 [node name="Main" type="Node3D"]
 script = ExtResource("1_ceq5v")
@@ -23,26 +48,22 @@ metadata/_edit_horizontal_guides_ = [-110.0]
 transform = Transform3D(1.00599, 0, 0, 0, 1.00599, 0, 0, 0, 1.00599, 0, 0, 2.43937)
 projection = 1
 current = true
+far = 29.88
 
 [node name="EntityContainer" type="Node" parent="."]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.999912, -0.000531612, 0.013236, 0.000457449, 0.999984, 0.00560551, -0.0132388, -0.00559896, 0.999897, 0, 0, 2)
+shadow_enabled = true
+shadow_opacity = 0.63
 
 [node name="BottomPanel" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.583659, 1)
 mesh = SubResource("QuadMesh_06nx3")
 
 [node name="BottomPanel2" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.969251, 0, 0, 0, 0.969251, 0, 0, 0, 0.969251, 0, 0.0775196, -1)
+transform = Transform3D(0.969251, 0, 0, 0, 0.969251, 0, 0, 0, 0.969251, 0, 0.0775196, -2)
 mesh = SubResource("QuadMesh_a1ep5")
-
-[node name="Curtain" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.23144, 0.00574341, -0.000664473)
-mesh = SubResource("QuadMesh_wwoxf")
-
-[node name="Curtain2" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.17865, 0.00574341, -0.000664473)
-mesh = SubResource("QuadMesh_wwoxf")
 
 [node name="HUD" type="Control" parent="."]
 layout_mode = 3
@@ -58,6 +79,107 @@ offset_right = 581.0
 offset_bottom = 376.0
 text = "FPS"
 script = ExtResource("2_4qlrq")
+
+[node name="Menus" type="Control" parent="HUD"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Center" type="CenterContainer" parent="HUD/Menus"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MenuDisplay" type="Control" parent="HUD/Menus/Center"]
+custom_minimum_size = Vector2(480, 1000)
+layout_mode = 2
+
+[node name="GameOver" type="VBoxContainer" parent="HUD/Menus/Center/MenuDisplay"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -240.0
+offset_top = -160.0
+offset_right = 240.0
+offset_bottom = 160.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("4_lfiit")
+
+[node name="GameOver" type="RichTextLabel" parent="HUD/Menus/Center/MenuDisplay/GameOver"]
+custom_minimum_size = Vector2(0, 88)
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 64
+bbcode_enabled = true
+text = "[center]Game Over[/center]"
+
+[node name="GameOver2" type="RichTextLabel" parent="HUD/Menus/Center/MenuDisplay/GameOver"]
+custom_minimum_size = Vector2(0, 128)
+layout_mode = 2
+size_flags_vertical = 3
+bbcode_enabled = true
+text = "[center]Press R to restart[/center]"
+
+[node name="MainMenu" type="VBoxContainer" parent="HUD/Menus/Center/MenuDisplay"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.5
+offset_top = -20.0
+offset_right = 20.5
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("4_3oj26")
+
+[node name="MenuButton5" type="Button" parent="HUD/Menus/Center/MenuDisplay/MainMenu"]
+custom_minimum_size = Vector2(320, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/pressed = SubResource("StyleBoxFlat_qx5d0")
+text = "Play	"
+
+[node name="MenuButton3" type="Button" parent="HUD/Menus/Center/MenuDisplay/MainMenu"]
+custom_minimum_size = Vector2(320, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "Setting"
+
+[node name="MenuButton4" type="Button" parent="HUD/Menus/Center/MenuDisplay/MainMenu"]
+custom_minimum_size = Vector2(320, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "Quit"
+
+[node name="Settings" type="VBoxContainer" parent="HUD/Menus/Center/MenuDisplay"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="HUD" type="VBoxContainer" parent="HUD"]
 layout_mode = 1
@@ -112,68 +234,32 @@ size_flags_vertical = 8
 [node name="Items" type="HBoxContainer" parent="HUD/HUD/Inventory"]
 layout_mode = 2
 size_flags_horizontal = 6
-theme_override_constants/separation = -4
+theme_override_constants/separation = -20
 
-[node name="ColorRect" type="ColorRect" parent="HUD/HUD/Inventory/Items"]
-custom_minimum_size = Vector2(96, 128)
+[node name="Card" parent="HUD/HUD/Inventory/Items" instance=ExtResource("3_rhv20")]
 layout_mode = 2
 
-[node name="ColorRect" type="ColorRect" parent="HUD/HUD/Inventory/Items/ColorRect"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 80.0
-offset_right = 80.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.608618, 0.4444, 0.4444, 1)
-
-[node name="ColorRect2" type="ColorRect" parent="HUD/HUD/Inventory/Items"]
-custom_minimum_size = Vector2(96, 128)
+[node name="Card2" parent="HUD/HUD/Inventory/Items" instance=ExtResource("3_rhv20")]
 layout_mode = 2
 
-[node name="ColorRect" type="ColorRect" parent="HUD/HUD/Inventory/Items/ColorRect2"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 80.0
-offset_right = 80.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.608618, 0.4444, 0.4444, 1)
+[node name="Card3" parent="HUD/HUD/Inventory/Items" instance=ExtResource("3_rhv20")]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 6
 
-[node name="ColorRect3" type="ColorRect" parent="HUD/HUD/Inventory/Items"]
-custom_minimum_size = Vector2(96, 128)
+[node name="Card4" parent="HUD/HUD/Inventory/Items" instance=ExtResource("3_rhv20")]
 layout_mode = 2
 
-[node name="ColorRect" type="ColorRect" parent="HUD/HUD/Inventory/Items/ColorRect3"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 80.0
-offset_right = 80.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.608618, 0.4444, 0.4444, 1)
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
 
-[node name="ColorRect4" type="ColorRect" parent="HUD/HUD/Inventory/Items"]
-custom_minimum_size = Vector2(96, 128)
-layout_mode = 2
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.499524, 0, 0, 0, 0.499524, 0, 0, 0, 0.499524, -0.777983, 0.11488, -1.61444)
+mesh = SubResource("QuadMesh_yrvcw")
 
-[node name="ColorRect" type="ColorRect" parent="HUD/HUD/Inventory/Items/ColorRect4"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 80.0
-offset_right = 80.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.608618, 0.4444, 0.4444, 1)
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.499524, 0, 0, 0, 0.499524, 0, 0, 0, 0.499524, 0.789193, 0.115, -1.61444)
+mesh = SubResource("QuadMesh_vfx06")
 
-[node name="ColorRect5" type="ColorRect" parent="HUD/HUD/Inventory/Items"]
-custom_minimum_size = Vector2(96, 128)
-layout_mode = 2
+[connection signal="start_signal" from="HUD/Menus/Center/MenuDisplay/MainMenu" to="." method="start_game"]
+[connection signal="button_down" from="HUD/Menus/Center/MenuDisplay/MainMenu/MenuButton5" to="HUD/Menus/Center/MenuDisplay/MainMenu" method="start_game"]
+[connection signal="button_down" from="HUD/Menus/Center/MenuDisplay/MainMenu/MenuButton4" to="HUD/Menus/Center/MenuDisplay/MainMenu" method="quit"]
