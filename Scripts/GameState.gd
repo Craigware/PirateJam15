@@ -17,6 +17,15 @@ enum DayStates {
 	MAX
 }
 
+var SkyColors = [
+	Color(1,1,1),
+	Color("79b5ed"),
+	Color("557bcf"),
+	Color("3c40ae"),
+	Color("353045"),
+	Color(1,1,1)
+]
+
 enum CloudStates {
 	NIL,
 	CLEAR,
@@ -68,7 +77,7 @@ func start_game() -> void:
 	create_enemy(1);
 
 	DaylightTimer = Timer.new();
-	DaylightTimer.wait_time = 75;
+	DaylightTimer.wait_time = 10;
 	DaylightTimer.timeout.connect(update_day_state);
 	DaylightTimer.autostart = true;
 	add_child(DaylightTimer);
@@ -89,6 +98,7 @@ func start_game() -> void:
 	update_cloud_state(CloudStates.CLEAR);
 	IsShadowed = false;
 	update_day_state(DayStates.DAWN);
+	$DaylightCycle.DayCycleTimer = DaylightTimer.wait_time;
 
 	State = GameStates.IDLE;
 	return;
@@ -234,9 +244,10 @@ func update_day_state(_dayState: DayStates = DayStates.NIL):
 			updatedState = DayState + 1 as DayStates;
 	else:
 		updatedState = _dayState;
-		
 	
 	DayState = updatedState as DayStates;
+	$DaylightCycle.DayState = DayState;
+	$DaylightCycle.SkyColor = SkyColors[DayState];
 	print("DayState updated to ", DayState);
 
 func update_cloud_state(_cloudState: CloudStates = CloudStates.NIL):

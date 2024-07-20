@@ -1,0 +1,47 @@
+[gd_scene load_steps=8 format=3 uid="uid://cdwmbpoachsu"]
+
+[ext_resource type="Texture2D" uid="uid://bj8ak8g133c11" path="res://Assets/Sun.png" id="1_jpfgf"]
+[ext_resource type="Script" path="res://Scenes/daylight_cycle.gd" id="1_l0xxw"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_thcu2"]
+transparency = 2
+alpha_scissor_threshold = 0.5
+alpha_antialiasing_mode = 0
+albedo_texture = ExtResource("1_jpfgf")
+
+[sub_resource type="QuadMesh" id="QuadMesh_0iy22"]
+material = SubResource("StandardMaterial3D_thcu2")
+size = Vector2(0.25, 0.25)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_5mcn0"]
+top_radius = 0.01
+bottom_radius = 0.01
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mvqg6"]
+albedo_color = Color(0.123188, 0.328507, 0.445691, 1)
+
+[sub_resource type="QuadMesh" id="QuadMesh_fa6ql"]
+material = SubResource("StandardMaterial3D_mvqg6")
+size = Vector2(10, 1)
+
+[node name="DaylightCycle" type="Node3D"]
+script = ExtResource("1_l0xxw")
+
+[node name="Sun" type="MeshInstance3D" parent="."]
+mesh = SubResource("QuadMesh_0iy22")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Sun"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.939075, -0.0438044)
+mesh = SubResource("CylinderMesh_5mcn0")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.0535205)
+light_color = Color(0.831373, 0.847059, 0.658824, 1)
+light_energy = 0.01
+
+[node name="Background" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.969251, 0, 0, 0, 0.969251, 0, 0, 0, 0.969251, 0, -0.303956, -0.532624)
+mesh = SubResource("QuadMesh_fa6ql")
+skeleton = NodePath("../OmniLight3D")
+
+[node name="Clouds" type="Node3D" parent="."]

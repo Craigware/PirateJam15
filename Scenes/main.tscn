@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://unql83c45yjx"]
+[gd_scene load_steps=15 format=3 uid="uid://unql83c45yjx"]
 
 [ext_resource type="Script" path="res://Scripts/GameState.gd" id="1_ceq5v"]
 [ext_resource type="Script" path="res://Scripts/fps.gd" id="2_4qlrq"]
@@ -7,16 +7,10 @@
 [ext_resource type="PackedScene" uid="uid://u7qrbi46tpre" path="res://Scenes/card.tscn" id="3_rhv20"]
 [ext_resource type="Script" path="res://Scripts/main_menu.gd" id="4_3oj26"]
 [ext_resource type="Script" path="res://Scripts/game_over.gd" id="4_lfiit"]
+[ext_resource type="PackedScene" uid="uid://cdwmbpoachsu" path="res://Scenes/daylight_cycle.tscn" id="8_qixen"]
 
 [sub_resource type="QuadMesh" id="QuadMesh_06nx3"]
 size = Vector2(10, 0.5)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mvqg6"]
-albedo_color = Color(0.123188, 0.328507, 0.445691, 1)
-
-[sub_resource type="QuadMesh" id="QuadMesh_a1ep5"]
-material = SubResource("StandardMaterial3D_mvqg6")
-size = Vector2(10, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qx5d0"]
 
@@ -60,10 +54,6 @@ shadow_opacity = 0.63
 [node name="BottomPanel" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.583659, 1)
 mesh = SubResource("QuadMesh_06nx3")
-
-[node name="BottomPanel2" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.969251, 0, 0, 0, 0.969251, 0, 0, 0, 0.969251, 0, 0.0775196, -2)
-mesh = SubResource("QuadMesh_a1ep5")
 
 [node name="HUD" type="Control" parent="."]
 layout_mode = 3
@@ -259,6 +249,9 @@ mesh = SubResource("QuadMesh_yrvcw")
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.499524, 0, 0, 0, 0.499524, 0, 0, 0, 0.499524, 0.789193, 0.115, -1.61444)
 mesh = SubResource("QuadMesh_vfx06")
+
+[node name="DaylightCycle" parent="." instance=ExtResource("8_qixen")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.505902, 0.339487, -1.91295)
 
 [connection signal="start_signal" from="HUD/Menus/Center/MenuDisplay/MainMenu" to="." method="start_game"]
 [connection signal="button_down" from="HUD/Menus/Center/MenuDisplay/MainMenu/MenuButton5" to="HUD/Menus/Center/MenuDisplay/MainMenu" method="start_game"]

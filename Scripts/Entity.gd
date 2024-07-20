@@ -14,7 +14,8 @@ enum EntityArchs {
 	PEDESTRIAN
 }
 
-@export var Health: int;
+@export var Health: float;
+@export var MaxHealth: float;
 @export var Sprite: Texture2D;
 @export var IsAlly: bool;
 @export var IsAgressive: bool;
@@ -39,6 +40,7 @@ var direction = 1;
 var startingY;
 
 func _ready() -> void:
+	MaxHealth = Health;
 	var material = StandardMaterial3D.new();
 	$SpriteMesh.mesh = $SpriteMesh.mesh.duplicate();
 	material = StandardMaterial3D.new();
@@ -75,6 +77,14 @@ func _physics_process(delta: float) -> void:
 
 func update_health(amount) -> void:
 	Health += amount;
+	var color_update = 1 - Health / MaxHealth;
+	var modulation = Vector3(1,1,1);
+	modulation.y -= color_update;
+	modulation.z -= color_update;
+	print(modulation)
+	print(color_update)
+	$SpriteMesh.mesh.material.albedo_color = Color(modulation.x, modulation.y, modulation.z);
+
 	if Health <= 0:
 		entity_death.emit(EntityID);
 	return;
