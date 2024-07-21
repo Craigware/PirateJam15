@@ -1,4 +1,4 @@
-extends Node
+extends Node3D
 class_name GameState
 
 enum GameStates {
@@ -34,7 +34,7 @@ enum CloudStates {
 	MAX
 }
 
-const ENTITY_LIMIT = 1024;
+const ENTITY_LIMIT = 128;
 
 var State : GameStates;
 var Entities : Array;
@@ -59,6 +59,27 @@ var AggrodArchitypes : Array = [
 
 @onready var EntityContainer : Node = $EntityContainer;
 
+func entity_ray_cast() -> Entity:
+	var cam = $Camera3D;
+	var space_state = get_world_3d().direct_space_state;
+	var mouse_pos = get_viewport().get_mouse_position();
+	var origin = cam.project_ray_origin(mouse_pos);
+	var end = origin + cam.project_ray_normal(mouse_pos) * 1000;
+	var query = PhysicsRayQueryParameters3D.create(origin, end);
+	var res = space_state.intersect_ray(query);
+
+	if res.has("collider"):
+		return res["collider"] as Entity;
+
+	return null;
+
+func _input(_event):
+	if Input.is_action_just_pressed("Click"):
+		var entity = entity_ray_cast();
+		if entity != null:
+			remove_entity(entity.EntityID);
+	pass
+
 func _process(_delta: float) -> void:
 	var _isCrafting = false;
 	for i in range(Entities.size()):
@@ -75,6 +96,15 @@ func start_game() -> void:
 	create_enemy(1);
 	create_enemy(1);
 	create_enemy(1);
+	create_enemy(1);
+	create_enemy(1);
+	create_enemy(1);
+	create_enemy(1);
+	create_enemy(1);
+	create_enemy(1);
+	create_enemy(1);
+	create_enemy(1);
+
 
 	DaylightTimer = Timer.new();
 	DaylightTimer.wait_time = 10;
@@ -118,11 +148,15 @@ func create_entity() -> Entity:
 func remove_entity(entityId: int) -> void:
 	if entityId == 0:
 		player_failed();
+		print("PLAYER DEDGE");
 		return;
 
 	var entity = Entities[entityId];
-	entity.die();
-	Entities[entityId] = null;
+	
+	if entity != null:
+		entity.die();
+		Entities[entityId] = null;
+
 	return;
 
 
@@ -213,7 +247,6 @@ func add_item_to_inventory(item: Item) -> bool:
 	else:
 		Inventory[item] = 1;
 
-	print(Inventory);
 	return true;
 
 
@@ -250,6 +283,7 @@ func update_day_state(_dayState: DayStates = DayStates.NIL):
 	$DaylightCycle.SkyColor = SkyColors[DayState];
 	print("DayState updated to ", DayState);
 
+
 func update_cloud_state(_cloudState: CloudStates = CloudStates.NIL):
 	if _cloudState == CloudStates.NIL:
 		_cloudState = randi_range(1,CloudStates.MAX-1) as CloudStates;
@@ -257,6 +291,7 @@ func update_cloud_state(_cloudState: CloudStates = CloudStates.NIL):
 	CloudStateTimer.wait_time = randf_range(5,20);
 	CloudStateTimer.start();
 	print("Cloud state updated to ", CloudState);
+
 
 func update_shadow_state():
 	var chance = randf_range(0,1);

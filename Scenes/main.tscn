@@ -221,23 +221,23 @@ custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_vertical = 8
 
-[node name="Items" type="HBoxContainer" parent="HUD/HUD/Inventory"]
+[node name="Cards" type="HBoxContainer" parent="HUD/HUD/Inventory"]
 layout_mode = 2
 size_flags_horizontal = 6
 theme_override_constants/separation = -20
 
-[node name="Card" parent="HUD/HUD/Inventory/Items" instance=ExtResource("3_rhv20")]
+[node name="Card" parent="HUD/HUD/Inventory/Cards" instance=ExtResource("3_rhv20")]
 layout_mode = 2
 
-[node name="Card2" parent="HUD/HUD/Inventory/Items" instance=ExtResource("3_rhv20")]
+[node name="Card2" parent="HUD/HUD/Inventory/Cards" instance=ExtResource("3_rhv20")]
 layout_mode = 2
 
-[node name="Card3" parent="HUD/HUD/Inventory/Items" instance=ExtResource("3_rhv20")]
+[node name="Card3" parent="HUD/HUD/Inventory/Cards" instance=ExtResource("3_rhv20")]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 6
 
-[node name="Card4" parent="HUD/HUD/Inventory/Items" instance=ExtResource("3_rhv20")]
+[node name="Card4" parent="HUD/HUD/Inventory/Cards" instance=ExtResource("3_rhv20")]
 layout_mode = 2
 
 [node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]

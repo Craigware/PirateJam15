@@ -22,8 +22,8 @@ enum ItemType {
 };
 
 static var Items : Array = [
-    Item.new("NIL ITEM NOT FOUND", Images[Sprites.NIL]),
-    Item.new("Health Potion", null)
+    Item.new("NIL ITEM NOT FOUND", Images[Sprites.NIL], Item.ItemTypes.ESSENCE),
+    Item.new("Health Potion", Images[Sprites.NIL], Item.ItemTypes.CARD),
 ];
 
 static var CraftingRecipes : Array = [

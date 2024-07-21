@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://bnecd3vsqai2k"]
+[gd_scene load_steps=6 format=3 uid="uid://bnecd3vsqai2k"]
 
 [ext_resource type="Script" path="res://Scripts/Entity.gd" id="1_2vmc1"]
 
@@ -13,7 +13,10 @@ height = 20.0
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_pt7ya"]
 
-[node name="Entity" type="Node3D"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_txkgp"]
+size = Vector3(2, 2, 0.01)
+
+[node name="Entity" type="StaticBody3D"]
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
 script = ExtResource("1_2vmc1")
 
@@ -27,3 +30,7 @@ mesh = SubResource("PlaneMesh_pt7ya")
 
 [node name="Particles" type="CPUParticles3D" parent="."]
 emitting = false
+
+[node name="Col" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 20, 0.507852)
+shape = SubResource("BoxShape3D_txkgp")
