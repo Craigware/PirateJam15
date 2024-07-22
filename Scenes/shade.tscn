@@ -1,0 +1,26 @@
+[gd_scene load_steps=5 format=3 uid="uid://cbhd8kkkdvo5i"]
+
+[sub_resource type="Gradient" id="Gradient_uvriu"]
+offsets = PackedFloat32Array(0.124088, 1)
+colors = PackedColorArray(0, 0, 0, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_0js8r"]
+gradient = SubResource("Gradient_uvriu")
+fill_from = Vector2(1, 0)
+fill_to = Vector2(1, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rex1u"]
+transparency = 3
+alpha_hash_scale = 1.0
+alpha_antialiasing_mode = 0
+blend_mode = 3
+albedo_color = Color(1, 1, 1, 0.698039)
+albedo_texture = SubResource("GradientTexture2D_0js8r")
+
+[sub_resource type="QuadMesh" id="QuadMesh_ftnux"]
+material = SubResource("StandardMaterial3D_rex1u")
+size = Vector2(2, 2)
+
+[node name="Node3D" type="MeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00517452, 0, 0.00030303)
+mesh = SubResource("QuadMesh_ftnux")

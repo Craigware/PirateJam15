@@ -39,6 +39,7 @@ const ENTITY_LIMIT = 128;
 var State : GameStates;
 var Entities : Array;
 var PS_Entity : PackedScene = load("res://Scenes/entity.tscn");
+var PS_Card : PackedScene = load("res://Scenes/card.tscn");
 var Player : Entity;
 var Inventory : Dictionary;
 var DayState : DayStates;
@@ -72,13 +73,6 @@ func entity_ray_cast() -> Entity:
 		return res["collider"] as Entity;
 
 	return null;
-
-func _input(_event):
-	if Input.is_action_just_pressed("Click"):
-		var entity = entity_ray_cast();
-		if entity != null:
-			remove_entity(entity.EntityID);
-	pass
 
 func _process(_delta: float) -> void:
 	var _isCrafting = false;
@@ -129,8 +123,10 @@ func start_game() -> void:
 	IsShadowed = false;
 	update_day_state(DayStates.DAWN);
 	$DaylightCycle.DayCycleTimer = DaylightTimer.wait_time;
-
+	$DaylightCycle.started = true;
 	State = GameStates.IDLE;
+
+	add_item_to_inventory(Assets.Items[Assets.ItemType.HEALTH_POTION]);
 	return;
 
 
@@ -229,6 +225,7 @@ func create_enemy(_architype) -> bool:
 
 	_entity.Sprite = Assets.Images[resource_id];
 	_entity.Health = 10;
+	_entity.AttackRate = 3;
 	_entity.EntityArch = Entity.EntityArchs.GHOUL;
 	_entity.IsAlly = false;
 	_entity.position = get_random_spawn_location(_entity.IsAlly);
@@ -237,15 +234,32 @@ func create_enemy(_architype) -> bool:
 	_entity.SwaySpeed = 0.1;
 	_entity.MeshSize = Vector2(2,3);
 
+	_entity.AttackTimer = Timer.new();
+	_entity.AttackTimer.wait_time = _entity.AttackRate;
+	_entity.AttackTimer.autostart = true;
+
 	EntityContainer.add_child(_entity);
 	return false;
 
 
 func add_item_to_inventory(item: Item) -> bool:
+	# Update UI
+
 	if Inventory.has(item):
 		Inventory[item] += 1;
 	else:
 		Inventory[item] = 1;
+		
+	if item.ItemType == Item.ItemTypes.CARD or item.ItemType == Item.ItemTypes.SPECIAL:
+		var card_display = $HUD/HUD/Inventory/Cards;
+		var new_card = PS_Card.instantiate();
+		new_card.related_item = item;
+		card_display.add_child(new_card);
+
+	if item.ItemType == Item.ItemTypes.ESSENCE:
+		var essence_display = $HUD/HUD/Inventory/Essence;
+		pass
+
 
 	return true;
 
@@ -253,6 +267,8 @@ func add_item_to_inventory(item: Item) -> bool:
 func remove_item_from_inventory(item: Item) -> bool:
 	if !Inventory.has(item):
 		return false;
+
+	# Update UI
 
 	Inventory[item] -= 1;
 	if Inventory[item] <= 0:
@@ -279,7 +295,7 @@ func update_day_state(_dayState: DayStates = DayStates.NIL):
 		updatedState = _dayState;
 	
 	DayState = updatedState as DayStates;
-	$DaylightCycle.DayState = DayState;
+	$DaylightCycle.update_day_state(DayState);
 	$DaylightCycle.SkyColor = SkyColors[DayState];
 	print("DayState updated to ", DayState);
 
@@ -295,6 +311,8 @@ func update_cloud_state(_cloudState: CloudStates = CloudStates.NIL):
 
 func update_shadow_state():
 	var chance = randf_range(0,1);
+
+	# maybe if we just swap off of shadow we cannot see shadow again for a while
 	if CloudState == CloudStates.OVERCAST:
 		if chance < .80:
 			IsShadowed = true;
@@ -312,6 +330,11 @@ func update_shadow_state():
 			IsShadowed = true;
 		else:
 			IsShadowed = false;
+
+	if IsShadowed:
+		$Shadow.visible = true;
+	else:
+		$Shadow.visible = false;
 
 	print("Shadow state updated. Is it currently shadowed? ", IsShadowed);
 

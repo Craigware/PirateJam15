@@ -16,6 +16,7 @@ enum EntityArchs {
 
 @export var Health: float;
 @export var MaxHealth: float;
+@export var AttackDamage : float;
 @export var Sprite: Texture2D;
 @export var IsAlly: bool;
 @export var IsAgressive: bool;
@@ -26,6 +27,7 @@ enum EntityArchs {
 @export var ItemDropID : Assets.ItemType;
 @export var IsCrafting : bool;
 @export var MeshSize : Vector2 = Vector2(2,2);
+@export var AttackRate : float = 0;
 
 var AppliedEssence : Dictionary = {Assets.Items[Assets.ItemType.NIL]: 1};
 
@@ -49,8 +51,14 @@ func _ready() -> void:
 	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR;
 	$SpriteMesh.mesh.material = material;
 	$SpriteMesh.mesh.size = MeshSize;
-
+	$Col.shape.size.y = MeshSize.y;
+	$Col.shape.size.x = MeshSize.x;
+	
 	startingY = position.y;
+
+	if AttackTimer != null:
+		add_child(AttackTimer);
+		AttackTimer.timeout.connect(attack);
 
 	if CraftingTimer != null:
 		add_child(CraftingTimer);
@@ -59,7 +67,6 @@ func _ready() -> void:
 	return;
 
 
-#Some reason if this is process the movement glitches out and stops, physics seems to fix this
 func _physics_process(delta: float) -> void:
 	#Implement more human movement later, more imperfections
 	#lerp this later
@@ -90,6 +97,12 @@ func update_health(amount) -> void:
 	return;
 
 
+func attack() -> void:
+	print("Me enemy me hit");
+	# Find entity to attack
+	# hit entity
+	pass;
+
 func apply_essence(item: Item) -> void:
 	if AppliedEssence.has(item):
 		AppliedEssence[item] += 1;
@@ -99,6 +112,12 @@ func apply_essence(item: Item) -> void:
 	if EntityArch == EntityArchs.CAULDRON:
 		begin_crafting();
 	return;
+
+
+func apply_card(item: Item) -> void:
+	if item.ItemID == Assets.ItemType.HEALTH_POTION:
+		update_health(5);
+	pass
 
 
 func begin_crafting() -> void:

@@ -7,6 +7,7 @@
 transparency = 2
 alpha_scissor_threshold = 0.5
 alpha_antialiasing_mode = 0
+shading_mode = 0
 albedo_texture = ExtResource("1_jpfgf")
 
 [sub_resource type="QuadMesh" id="QuadMesh_0iy22"]
@@ -28,20 +29,22 @@ size = Vector2(10, 1)
 script = ExtResource("1_l0xxw")
 
 [node name="Sun" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0)
 mesh = SubResource("QuadMesh_0iy22")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Sun"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.939075, -0.0438044)
 mesh = SubResource("CylinderMesh_5mcn0")
 
-[node name="OmniLight3D" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.0535205)
+[node name="OmniLight3D" type="OmniLight3D" parent="Sun"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00210726, 0, 0.0535205)
 light_color = Color(0.831373, 0.847059, 0.658824, 1)
-light_energy = 0.01
+light_energy = 0.25
+omni_range = 0.706
 
 [node name="Background" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.969251, 0, 0, 0, 0.969251, 0, 0, 0, 0.969251, 0, -0.303956, -0.532624)
 mesh = SubResource("QuadMesh_fa6ql")
-skeleton = NodePath("../OmniLight3D")
+skeleton = NodePath("../Sun/OmniLight3D")
 
 [node name="Clouds" type="Node3D" parent="."]
