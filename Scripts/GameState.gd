@@ -241,7 +241,6 @@ func create_enemy(_architype) -> bool:
 	EntityContainer.add_child(_entity);
 	return false;
 
-
 func add_item_to_inventory(item: Item) -> bool:
 	# Update UI
 
@@ -255,14 +254,11 @@ func add_item_to_inventory(item: Item) -> bool:
 		var new_card = PS_Card.instantiate();
 		new_card.related_item = item;
 		card_display.add_child(new_card);
-
 	if item.ItemType == Item.ItemTypes.ESSENCE:
 		var essence_display = $HUD/HUD/Inventory/Essence;
+		# Work on this today
 		pass
-
-
 	return true;
-
 
 func remove_item_from_inventory(item: Item) -> bool:
 	if !Inventory.has(item):
