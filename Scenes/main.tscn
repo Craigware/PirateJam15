@@ -241,6 +241,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.339, -1.913)
 
 [node name="Shadow" parent="." instance=ExtResource("8_ytxp0")]
 transform = Transform3D(0.629302, 0.35434, 0, -0.183329, 1.21632, 0, 0, 0, 1.0015, -0.461156, 0.112932, 0.67709)
+visible = false
 
 [connection signal="start_signal" from="HUD/Menus/Center/MenuDisplay/MainMenu" to="." method="start_game"]
 [connection signal="button_down" from="HUD/Menus/Center/MenuDisplay/MainMenu/MenuButton5" to="HUD/Menus/Center/MenuDisplay/MainMenu" method="start_game"]
