@@ -191,40 +191,23 @@ size_flags_horizontal = 6
 size_flags_vertical = 4
 theme_override_constants/separation = 12
 
-[node name="Slot0" type="ColorRect" parent="HUD/HUD/Inventory/Essence"]
-custom_minimum_size = Vector2(64, 64)
-layout_mode = 2
-size_flags_vertical = 8
-
-[node name="Slot1" type="ColorRect" parent="HUD/HUD/Inventory/Essence"]
-custom_minimum_size = Vector2(64, 64)
-layout_mode = 2
-size_flags_vertical = 8
-
-[node name="Slot2" type="ColorRect" parent="HUD/HUD/Inventory/Essence"]
-custom_minimum_size = Vector2(64, 64)
-layout_mode = 2
-size_flags_vertical = 8
-
-[node name="Slot3" type="ColorRect" parent="HUD/HUD/Inventory/Essence"]
-custom_minimum_size = Vector2(64, 64)
-layout_mode = 2
-size_flags_vertical = 8
-
-[node name="Slot4" type="ColorRect" parent="HUD/HUD/Inventory/Essence"]
-custom_minimum_size = Vector2(64, 64)
-layout_mode = 2
-size_flags_vertical = 8
-
-[node name="Slot5" type="ColorRect" parent="HUD/HUD/Inventory/Essence"]
-custom_minimum_size = Vector2(64, 64)
-layout_mode = 2
-size_flags_vertical = 8
-
 [node name="Cards" type="HBoxContainer" parent="HUD/HUD/Inventory"]
 layout_mode = 2
 size_flags_horizontal = 6
 theme_override_constants/separation = -20
+
+[node name="DayCount" type="RichTextLabel" parent="HUD"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -640.0
+offset_right = 640.0
+offset_bottom = 60.0
+grow_horizontal = 2
+size_flags_vertical = 3
+bbcode_enabled = true
+text = "[right]DAY XYZ"
 
 [node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
 

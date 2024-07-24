@@ -2,16 +2,24 @@ extends Button;
 class_name Card;
 
 @export var related_item : Item;
+var essence_amount = 0;
 var isHovered : bool = false;
 var isSelected : bool = false;
 
 
 func _ready() -> void:
-	var icon = $MarginContainer/Card/MarginContainer/VBoxContainer/CenterContainer/Icon;
-	var name_label = $MarginContainer/Card/MarginContainer/VBoxContainer/Name;
+	if related_item.ItemType == Item.ItemTypes.CARD or related_item.ItemType == Item.ItemTypes.SPECIAL:
+		var _icon = $MarginContainer/Card/MarginContainer/VBoxContainer/CenterContainer/Icon;
+		_icon.texture = related_item.Icon; 
+		var name_label = $MarginContainer/Card/MarginContainer/VBoxContainer/Name;
+		name_label.text = related_item.Name;
 	
-	icon.texture = related_item.Icon; 
-	name_label.text = related_item.Name;
+	if related_item.ItemType == Item.ItemTypes.ESSENCE:
+		var _icon = $MarginContainer/Icon;
+		var _amount = $Amount;
+
+		_icon.texture = related_item.Icon;
+		_amount.text = "[center]"+str(essence_amount);
 	pass
 
 func _input(_event: InputEvent) -> void:
@@ -47,7 +55,6 @@ func deselected() -> void:
 
 	if entity == null: 
 		return;
-
 	if related_item.ItemType == Item.ItemTypes.ESSENCE:
 		entity.apply_essence(related_item);
 		pass

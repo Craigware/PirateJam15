@@ -40,6 +40,12 @@ static var Items : Array = [
 
 static var CraftingRecipes : Array = [
     {Items[ItemType.NIL]: 1},
-    {}
+    {Items[ItemType.NIL]: 1},
+    {Items[ItemType.NIL]: 1},
+    {Items[ItemType.NIL]: 1},
+    {Items[ItemType.NIL]: 1},
+    {Items[ItemType.NIL]: 1},
+    {Items[ItemType.NIL]: 1},
+    {Items[ItemType.COMMON_ESSENCE]: 1},
 ];
 

@@ -29,7 +29,7 @@ enum EntityArchs {
 @export var MeshSize : Vector2 = Vector2(2,2);
 @export var AttackRate : float = 0;
 
-var AppliedEssence : Dictionary = {Assets.Items[Assets.ItemType.NIL]: 1};
+var AppliedEssence : Dictionary = {};
 
 var AttackTimer : Timer;
 var EntityID : int;
@@ -88,8 +88,6 @@ func update_health(amount) -> void:
 	var modulation = Vector3(1,1,1);
 	modulation.y -= color_update;
 	modulation.z -= color_update;
-	print(modulation)
-	print(color_update)
 	$SpriteMesh.mesh.material.albedo_color = Color(modulation.x, modulation.y, modulation.z);
 
 	if Health <= 0:
@@ -137,7 +135,6 @@ func finish_crafting() -> void:
 	for i in range(Assets.ItemType.MAX):
 		if AppliedEssence.keys() == Assets.CraftingRecipes[i].keys():
 			potential_items.append(i);
-
 	if potential_items.size() == 0:
 		return;
 
@@ -146,7 +143,7 @@ func finish_crafting() -> void:
 		var difference = 0;
 		var keys = AppliedEssence.keys();
 		for x in range(keys.size()):
-			var _diff = AppliedEssence[keys[x]] - Assets.CraftingRecipes[i][keys[x]];
+			var _diff = AppliedEssence[keys[x]] - Assets.CraftingRecipes[potential_items[i]][keys[x]];
 			if _diff < 0:
 				difference = -1000;
 				break;

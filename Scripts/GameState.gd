@@ -40,6 +40,7 @@ var State : GameStates;
 var Entities : Array;
 var PS_Entity : PackedScene = load("res://Scenes/entity.tscn");
 var PS_Card : PackedScene = load("res://Scenes/card.tscn");
+var PS_Essence : PackedScene = load("res://Scenes/essence.tscn");
 var Player : Entity;
 var Inventory : Dictionary;
 var DayState : DayStates;
@@ -110,12 +111,13 @@ func start_game() -> void:
 
 	update_cloud_state(CloudStates.CLEAR);
 	IsShadowed = false;
-	update_day_state(DayStates.DAWN);
+	update_day_state(DayStates.DUSK);
 	$DaylightCycle.DayCycleTimer = DaylightTimer.wait_time;
 	$DaylightCycle.started = true;
 	State = GameStates.IDLE;
 
 	add_item_to_inventory(Assets.Items[Assets.ItemType.HEALTH_POTION]);
+	add_item_to_inventory(Assets.Items[Assets.ItemType.COMMON_ESSENCE]);
 	return;
 
 
@@ -245,7 +247,16 @@ func add_item_to_inventory(item: Item) -> bool:
 		card_display.add_child(new_card);
 	if item.ItemType == Item.ItemTypes.ESSENCE:
 		var _essence_display = $HUD/HUD/Inventory/Essence;
-		# Work on this today
+
+		for i in range(_essence_display.get_child_count()):
+			if _essence_display.get_child(i).related_item == item:
+				_essence_display.get_child(i).essence_amount += 1;
+				return true;
+		
+		var new_card = PS_Essence.instantiate();
+		new_card.related_item = item;
+		new_card.essence_amount = 1;
+		_essence_display.add_child(new_card)
 		pass
 	return true;
 
