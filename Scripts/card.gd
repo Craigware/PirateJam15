@@ -47,8 +47,6 @@ func unhovered() -> void:
 # I wanna have a hearthstone style arrow here
 func selected() -> void:
 	isSelected = true;
-	print("Selected.")
-	pass
 
 func deselected() -> void:	
 	isSelected = false;
@@ -68,7 +66,6 @@ func deselected() -> void:
 		update_ui();
 		gameState.remove_item_from_inventory(related_item);
 		if essence_amount <= 0:
-			print("Bang")
 			queue_free();
 		
 

@@ -219,9 +219,11 @@ func create_enemy(_architype) -> bool:
 	_entity.Sprite = Assets.Images[resource_id];
 	_entity.Health = 10;
 	_entity.AttackRate = 3;
+	
 	_entity.EntityArch = Entity.EntityArchs.GHOUL;
 	_entity.IsAlly = false;
 	_entity.position = get_random_spawn_location(_entity.IsAlly);
+
 	_entity.MovePattern = Entity.MovementPattern.SWAY;
 	_entity.SwayArc = 0.05;
 	_entity.SwaySpeed = 0.1;
@@ -232,7 +234,7 @@ func create_enemy(_architype) -> bool:
 	_entity.AttackTimer.autostart = true;
 
 	EntityContainer.add_child(_entity);
-	return false;
+	return true;
 
 func add_item_to_inventory(item: Item, amount: int = 1) -> bool:
 	if Inventory.has(item):
@@ -263,8 +265,6 @@ func add_item_to_inventory(item: Item, amount: int = 1) -> bool:
 func remove_item_from_inventory(item: Item, amount: int = 1) -> bool:
 	if !Inventory.has(item):
 		return false;
-
-	# Update UI
 
 	Inventory[item] -= amount;
 	if Inventory[item] <= 0:

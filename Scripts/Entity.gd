@@ -163,13 +163,12 @@ func finish_crafting() -> void:
 
 	item = Assets.Items[potential_items[lowest]];
 	finished_crafting.emit(item);
-	print(AppliedEssence)
+	
 	for i in range(len(keys)):
 		AppliedEssence[keys[i]] -= Assets.CraftingRecipes[potential_items[lowest]][keys[i]];
 		if AppliedEssence[keys[i]] <= 0:
 			AppliedEssence.erase(keys[i]);
 	
-	print(AppliedEssence)
 	if AppliedEssence != {}:
 		begin_crafting();
 		return;
@@ -179,6 +178,4 @@ func finish_crafting() -> void:
 
 func die() -> void:
 	queue_free();
-	# if Entities[entityId].ItemDropID != null:
-	# 	add_item_to_inventory(Entities[entityId].ItemDropID);
 	return;
