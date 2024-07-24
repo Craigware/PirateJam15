@@ -8,6 +8,9 @@ var isSelected : bool = false;
 
 
 func _ready() -> void:
+	update_ui()
+
+func update_ui():
 	if related_item.ItemType == Item.ItemTypes.CARD or related_item.ItemType == Item.ItemTypes.SPECIAL:
 		var _icon = $MarginContainer/Card/MarginContainer/VBoxContainer/CenterContainer/Icon;
 		_icon.texture = related_item.Icon; 
@@ -20,7 +23,6 @@ func _ready() -> void:
 
 		_icon.texture = related_item.Icon;
 		_amount.text = "[center]"+str(essence_amount);
-	pass
 
 func _input(_event: InputEvent) -> void:
 	if Input.is_action_just_pressed("Click"):
@@ -50,19 +52,32 @@ func selected() -> void:
 
 func deselected() -> void:	
 	isSelected = false;
-	var gameState = get_node("/root/Main");
+	var gameState = get_node("/root/Main") as GameState;
 	var entity = gameState.entity_ray_cast();
 
 	if entity == null: 
 		return;
+		
+	
 	if related_item.ItemType == Item.ItemTypes.ESSENCE:
-		entity.apply_essence(related_item);
-		pass
+		if essence_amount <= 0:
+			return;
+		var res = entity.apply_essence(related_item);
+		if !res: return;
+		essence_amount -= 1;
+		update_ui();
+		gameState.remove_item_from_inventory(related_item);
+		if essence_amount <= 0:
+			print("Bang")
+			queue_free();
+		
+
 	if related_item.ItemType == Item.ItemTypes.CARD:
 		entity.apply_card(related_item);
-		pass
+		gameState.remove_item_from_inventory(related_item);
+		queue_free();
+		
+
 	if related_item.ItemType == Item.ItemTypes.SPECIAL:
 		# bunch of ifs for different item effects
 		pass
-
-	queue_free();

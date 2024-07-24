@@ -91,6 +91,8 @@ func update_health(amount) -> void:
 	$SpriteMesh.mesh.material.albedo_color = Color(modulation.x, modulation.y, modulation.z);
 
 	if Health <= 0:
+		if ItemDropID != null:
+			get_node("/root/main").add_item_to_inventory(Assets.Items[ItemDropID]);
 		entity_death.emit(EntityID);
 	return;
 
@@ -99,7 +101,10 @@ func attack() -> void:
 	#### NEEDS WORK!!!
 	pass;
 
-func apply_essence(item: Item) -> void:
+func apply_essence(item: Item) -> bool:
+	# Change this later if decide to be able to apply essence to creatures
+	if EntityArch != EntityArchs.CAULDRON: return false;
+
 	if AppliedEssence.has(item):
 		AppliedEssence[item] += 1;
 	else:
@@ -107,7 +112,7 @@ func apply_essence(item: Item) -> void:
 
 	if EntityArch == EntityArchs.CAULDRON:
 		begin_crafting();
-	return;
+	return true;
 
 
 func apply_card(item: Item) -> void:
@@ -128,10 +133,11 @@ func finish_crafting() -> void:
 	# Gets the differences between the two dictionaries, if the crafting recipe requires more than what the entity has it has the difference of -1000 and will be ignored
 	# Gets the lowest difference that isn't -1000
 	var item = null;
+	var keys = AppliedEssence.keys();
 
 	var potential_items = [];
 	for i in range(Assets.ItemType.MAX):
-		if AppliedEssence.keys() == Assets.CraftingRecipes[i].keys():
+		if keys == Assets.CraftingRecipes[i].keys():
 			potential_items.append(i);
 	if potential_items.size() == 0:
 		return;
@@ -139,7 +145,6 @@ func finish_crafting() -> void:
 	var differences = [];
 	for i in range(potential_items.size()):
 		var difference = 0;
-		var keys = AppliedEssence.keys();
 		for x in range(keys.size()):
 			var _diff = AppliedEssence[keys[x]] - Assets.CraftingRecipes[potential_items[i]][keys[x]];
 			if _diff < 0:
@@ -158,6 +163,17 @@ func finish_crafting() -> void:
 
 	item = Assets.Items[potential_items[lowest]];
 	finished_crafting.emit(item);
+	print(AppliedEssence)
+	for i in range(len(keys)):
+		AppliedEssence[keys[i]] -= Assets.CraftingRecipes[potential_items[lowest]][keys[i]];
+		if AppliedEssence[keys[i]] <= 0:
+			AppliedEssence.erase(keys[i]);
+	
+	print(AppliedEssence)
+	if AppliedEssence != {}:
+		begin_crafting();
+		return;
+	IsCrafting = false;
 	return;
 
 

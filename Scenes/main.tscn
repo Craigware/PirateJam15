@@ -209,13 +209,11 @@ size_flags_vertical = 3
 bbcode_enabled = true
 text = "[right]DAY XYZ"
 
-[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="CurtainL" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.499524, 0, 0, 0, 0.499524, 0, 0, 0, 0.499524, -0.777983, 0.11488, -1.61444)
 mesh = SubResource("QuadMesh_yrvcw")
 
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+[node name="CurtainR" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.499524, 0, 0, 0, 0.499524, 0, 0, 0, 0.499524, 0.789193, 0.115, -1.61444)
 mesh = SubResource("QuadMesh_vfx06")
 

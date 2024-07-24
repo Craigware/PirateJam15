@@ -117,7 +117,9 @@ func start_game() -> void:
 	State = GameStates.IDLE;
 
 	add_item_to_inventory(Assets.Items[Assets.ItemType.HEALTH_POTION]);
-	add_item_to_inventory(Assets.Items[Assets.ItemType.COMMON_ESSENCE]);
+	
+	add_item_to_inventory(Assets.Items[Assets.ItemType.COMMON_ESSENCE], 30);
+	
 	return;
 
 
@@ -232,13 +234,11 @@ func create_enemy(_architype) -> bool:
 	EntityContainer.add_child(_entity);
 	return false;
 
-func add_item_to_inventory(item: Item) -> bool:
-	# Update UI
-
+func add_item_to_inventory(item: Item, amount: int = 1) -> bool:
 	if Inventory.has(item):
-		Inventory[item] += 1;
+		Inventory[item] += amount;
 	else:
-		Inventory[item] = 1;
+		Inventory[item] = amount;
 		
 	if item.ItemType == Item.ItemTypes.CARD or item.ItemType == Item.ItemTypes.SPECIAL:
 		var card_display = $HUD/HUD/Inventory/Cards;
@@ -250,23 +250,23 @@ func add_item_to_inventory(item: Item) -> bool:
 
 		for i in range(_essence_display.get_child_count()):
 			if _essence_display.get_child(i).related_item == item:
-				_essence_display.get_child(i).essence_amount += 1;
+				_essence_display.get_child(i).essence_amount += amount;
+				_essence_display.get_child(i).update_ui();
 				return true;
 		
 		var new_card = PS_Essence.instantiate();
 		new_card.related_item = item;
-		new_card.essence_amount = 1;
+		new_card.essence_amount = amount;
 		_essence_display.add_child(new_card)
-		pass
 	return true;
 
-func remove_item_from_inventory(item: Item) -> bool:
+func remove_item_from_inventory(item: Item, amount: int = 1) -> bool:
 	if !Inventory.has(item):
 		return false;
 
 	# Update UI
 
-	Inventory[item] -= 1;
+	Inventory[item] -= amount;
 	if Inventory[item] <= 0:
 		Inventory.erase(item);
 	
