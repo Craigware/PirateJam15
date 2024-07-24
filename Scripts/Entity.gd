@@ -96,9 +96,7 @@ func update_health(amount) -> void:
 
 
 func attack() -> void:
-	print("Me enemy me hit");
-	# Find entity to attack
-	# hit entity
+	#### NEEDS WORK!!!
 	pass;
 
 func apply_essence(item: Item) -> void:
