@@ -88,20 +88,9 @@ func start_game() -> void:
 	create_player();
 	create_cauldron();
 	create_enemy(1);
-	create_enemy(1);
-	create_enemy(1);
-	create_enemy(1);
-	create_enemy(1);
-	create_enemy(1);
-	create_enemy(1);
-	create_enemy(1);
-	create_enemy(1);
-	create_enemy(1);
-	create_enemy(1);
-
 
 	DaylightTimer = Timer.new();
-	DaylightTimer.wait_time = 10;
+	DaylightTimer.wait_time = 75;
 	DaylightTimer.timeout.connect(update_day_state);
 	DaylightTimer.autostart = true;
 	add_child(DaylightTimer);
