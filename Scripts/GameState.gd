@@ -244,7 +244,7 @@ func add_item_to_inventory(item: Item) -> bool:
 		new_card.related_item = item;
 		card_display.add_child(new_card);
 	if item.ItemType == Item.ItemTypes.ESSENCE:
-		var essence_display = $HUD/HUD/Inventory/Essence;
+		var _essence_display = $HUD/HUD/Inventory/Essence;
 		# Work on this today
 		pass
 	return true;
@@ -318,8 +318,12 @@ func update_shadow_state():
 
 	if IsShadowed:
 		$Shadow.visible = true;
+		if !get_node("/root/AudioSystem").sounds_muffled:
+			get_node("/root/AudioSystem").muffle_sounds();
 	else:
 		$Shadow.visible = false;
+		if get_node("/root/AudioSystem").sounds_muffled:
+			get_node("/root/AudioSystem").muffle_sounds();
 
 	print("Shadow state updated. Is it currently shadowed? ", IsShadowed);
 

@@ -19,12 +19,13 @@ var Songs = [
 	load("res://Assets/music/GameJamNight_FINISHED.wav"),
 ];
 enum SoundEffectCatalog {
+	NIL
 }
 var SoundEffects = [];
 var AudioStreams = [];
 var current_index = 3
 var override_index = 1;
-
+var sounds_muffled := false;
 func _ready() -> void:
 	AudioStreams.resize(MAX_SOUND_EFFECTS);
 	MusicPlayer = AudioStreamPlayer3D.new();
@@ -40,7 +41,15 @@ func _ready() -> void:
 	sound_effects.name = "SoundEffects";
 	add_child(sound_effects);
 
-	play_sound_effect(1);
+func _physics_process(_delta: float) -> void:
+	if sounds_muffled:
+		for i in range(len(AudioStreams)):
+			if AudioStreams[i] != null && AudioStreams[i].max_db > -3.0:
+				AudioStreams[i].max_db -= 0.05;
+	if !sounds_muffled:
+		for i in range(len(AudioStreams)):
+			if AudioStreams[i] != null && AudioStreams[i].max_db < 3.0:
+				AudioStreams[i].max_db += 0.05;
 
 func switch_song():
 	current_index += 1;
@@ -51,12 +60,15 @@ func switch_song():
 	MusicPlayer.play();
 
 
-func play_sound_effect(sound: SoundEffectCatalog) -> void:
+func play_sound_effect(_sound: SoundEffectCatalog = SoundEffectCatalog.NIL) -> void:
 	var player = create_audiostream();
 	# player.stream  = SoundEffects[sound];
 	player.bus = "SoundEffects";
 	$SoundEffects.add_child(player);
 	
+
+func muffle_sounds() -> void:
+	sounds_muffled = !sounds_muffled;
 
 func create_audiostream() -> AudioStreamPlayer3D:
 	for i in range(MAX_SOUND_EFFECTS):
