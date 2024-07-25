@@ -1,6 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://bnecd3vsqai2k"]
+[gd_scene load_steps=9 format=3 uid="uid://bnecd3vsqai2k"]
 
 [ext_resource type="Script" path="res://Scripts/Entity.gd" id="1_2vmc1"]
+[ext_resource type="Shader" path="res://Scenes/CauldronSmoke.gdshader" id="2_riu6i"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_d64sj"]
 albedo_color = Color(0.690082, 0.61609, 0.449423, 1)
@@ -15,6 +16,16 @@ height = 20.0
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_txkgp"]
 size = Vector3(2, 2, 0.01)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_2fg7n"]
+render_priority = 0
+shader = ExtResource("2_riu6i")
+
+[sub_resource type="QuadMesh" id="QuadMesh_25jyj"]
+material = SubResource("ShaderMaterial_2fg7n")
+size = Vector2(1, 2)
+subdivide_width = 10
+subdivide_depth = 10
 
 [node name="Entity" type="StaticBody3D"]
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
@@ -34,3 +45,8 @@ emitting = false
 [node name="Col" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 20, 0.507852)
 shape = SubResource("BoxShape3D_txkgp")
+
+[node name="Smoke" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0605069, 21.7114, 0)
+visible = false
+mesh = SubResource("QuadMesh_25jyj")

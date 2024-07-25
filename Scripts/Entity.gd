@@ -122,6 +122,7 @@ func apply_card(item: Item) -> void:
 
 
 func begin_crafting() -> void:
+	$Smoke.visible = true;
 	CraftingTimer.start();
 	IsCrafting = true;
 	return;
@@ -178,7 +179,6 @@ func finish_crafting() -> void:
 	item = Assets.Items[potential_items[lowest]];
 	finished_crafting.emit(item);
 	
-
 	print(AppliedEssence);
 
 	var _recipe_keys = Assets.CraftingRecipes[potential_items[lowest]].keys();
@@ -193,6 +193,7 @@ func finish_crafting() -> void:
 		begin_crafting();
 		return;
 	IsCrafting = false;
+	$Smoke.visible = false;
 	return;
 
 
