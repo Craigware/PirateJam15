@@ -119,7 +119,9 @@ func start_game() -> void:
 	add_item_to_inventory(Assets.Items[Assets.ItemType.HEALTH_POTION]);
 	
 	add_item_to_inventory(Assets.Items[Assets.ItemType.COMMON_ESSENCE], 30);
-	
+	add_item_to_inventory(Assets.Items[Assets.ItemType.ANIMAL_ESSENCE], 30);
+	add_item_to_inventory(Assets.Items[Assets.ItemType.HOLY_ESSENCE], 30);
+	add_item_to_inventory(Assets.Items[Assets.ItemType.UNDEAD_ESSENCE], 30);
 	return;
 
 

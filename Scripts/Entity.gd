@@ -135,18 +135,32 @@ func finish_crafting() -> void:
 	var item = null;
 	var keys = AppliedEssence.keys();
 
+	# logic error here 
 	var potential_items = [];
 	for i in range(Assets.ItemType.MAX):
-		if keys == Assets.CraftingRecipes[i].keys():
-			potential_items.append(i);
+		var recipe_keys = Assets.CraftingRecipes[i].keys();
+		var count = 0;
+		for x in range(len(keys)):
+			if recipe_keys.has(keys[x]):
+				count += 1;
+		
+		if count == len(recipe_keys):
+			potential_items.append(i);	
+
 	if potential_items.size() == 0:
+		begin_crafting();
 		return;
 
 	var differences = [];
 	for i in range(potential_items.size()):
 		var difference = 0;
-		for x in range(keys.size()):
-			var _diff = AppliedEssence[keys[x]] - Assets.CraftingRecipes[potential_items[i]][keys[x]];
+		var recipe_keys = Assets.CraftingRecipes[i].keys();
+
+		for x in range(len(recipe_keys)):
+			if !AppliedEssence.has(recipe_keys[x]):
+				difference = -1000;
+				break;
+			var _diff = AppliedEssence[recipe_keys[x]] - Assets.CraftingRecipes[potential_items[i]][recipe_keys[x]];
 			if _diff < 0:
 				difference = -1000;
 				break;
@@ -160,15 +174,21 @@ func finish_crafting() -> void:
 			lowest = i
 		if differences[i] < differences[lowest] && differences[i] != -1000:
 			lowest = i;
-
+	
 	item = Assets.Items[potential_items[lowest]];
 	finished_crafting.emit(item);
 	
-	for i in range(len(keys)):
-		AppliedEssence[keys[i]] -= Assets.CraftingRecipes[potential_items[lowest]][keys[i]];
-		if AppliedEssence[keys[i]] <= 0:
+
+	print(AppliedEssence);
+
+	var _recipe_keys = Assets.CraftingRecipes[potential_items[lowest]].keys();
+	for i in range(len(_recipe_keys)):
+		AppliedEssence[_recipe_keys[i]] -= Assets.CraftingRecipes[potential_items[lowest]][_recipe_keys[i]];
+		if AppliedEssence[_recipe_keys[i]] <= 0:
 			AppliedEssence.erase(keys[i]);
 	
+	
+	print(AppliedEssence);
 	if AppliedEssence != {}:
 		begin_crafting();
 		return;
