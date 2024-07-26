@@ -1,13 +1,6 @@
 extends Node3D
 class_name GameState
 
-enum GameStates {
-	IDLE     = 0,
-	CRAFTING = 1,
-	BATTLE   = 2,
-	FAIL     = 3
-}
-
 enum DayStates {
 	NIL,
 	DAWN,
@@ -36,7 +29,6 @@ enum CloudStates {
 
 const ENTITY_LIMIT = 128;
 
-var State : GameStates;
 var Entities : Array;
 var PS_Entity : PackedScene = load("res://Scenes/entity.tscn");
 var PS_Card : PackedScene = load("res://Scenes/card.tscn");
@@ -89,7 +81,7 @@ func start_game() -> void:
 	create_player();
 	create_cauldron();
 	create_enemy(Entity.EntityArchs.VAMPIRE);
-
+	create_enemy(Entity.EntityArchs.VILLAGER);
 	DaylightTimer = Timer.new();
 	DaylightTimer.wait_time = 75;
 	DaylightTimer.timeout.connect(update_day_state);
@@ -114,7 +106,6 @@ func start_game() -> void:
 	update_day_state(DayStates.DUSK);
 	$DaylightCycle.DayCycleTimer = DaylightTimer.wait_time;
 	$DaylightCycle.started = true;
-	State = GameStates.IDLE;
 
 	add_item_to_inventory(Assets.Items[Assets.ItemType.HEALTH_POTION]);
 	
@@ -258,6 +249,33 @@ func create_enemy(_architype: Entity.EntityArchs) -> bool:
 		_entity.SwayArc = 0.05;
 		_entity.SwaySpeed = 0.1;
 		_entity.MeshSize = Vector2(3,3.5);
+
+		_entity.AttackTimer = Timer.new();
+		_entity.AttackTimer.wait_time = _entity.AttackRate;
+		_entity.AttackTimer.autostart = true;
+
+		EntityContainer.add_child(_entity);
+		return true;
+
+	if _architype == Entity.EntityArchs.VILLAGER:
+		var _entity = create_entity();
+		var resource_id = Assets.Sprites.VILLAGER;
+		if resource_id > Assets.Images.size()-1: 
+			resource_id = Assets.Sprites.NIL;
+
+		_entity.Sprite = Assets.Images[resource_id];
+		_entity.Health = 10;
+		_entity.AttackRate = 3;
+		
+		_entity.EntityArch = Entity.EntityArchs.VILLAGER;
+		_entity.IsAlly = false;
+		_entity.position = get_random_spawn_location(_entity.IsAlly);
+
+		_entity.MovePattern = Entity.MovementPattern.SWAY;
+		_entity.SwayArc = 0.05;
+		_entity.SwaySpeed = 0.1;
+		_entity.MeshSize = Vector2(3,3);
+		_entity.MeshOffset = Vector3(0.4,0,0);
 
 		_entity.AttackTimer = Timer.new();
 		_entity.AttackTimer.wait_time = _entity.AttackRate;

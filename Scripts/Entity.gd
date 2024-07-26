@@ -12,10 +12,10 @@ enum EntityArchs {
 	CAULDRON,
 	GHOUL,
 	VILLAGER,
-    GUARD,
-    VAMPIRE,
-    GOBLIN,
-    PIG
+	GUARD,
+	VAMPIRE,
+	GOBLIN,
+	PIG
 }
 
 @export var Health: float;
@@ -31,6 +31,7 @@ enum EntityArchs {
 @export var ItemDropID : Assets.ItemType;
 @export var IsCrafting : bool;
 @export var MeshSize : Vector2 = Vector2(2,2);
+@export var MeshOffset : Vector3 = Vector3(0,0,0);
 @export var AttackRate : float = 0;
 
 var AppliedEssence : Dictionary = {};
@@ -48,6 +49,7 @@ var startingY;
 func _ready() -> void:
 	MaxHealth = Health;
 	var material = StandardMaterial3D.new();
+	$SpriteMesh.position += MeshOffset;
 	$SpriteMesh.mesh = $SpriteMesh.mesh.duplicate();
 	material = StandardMaterial3D.new();
 	material.albedo_texture = Sprite;
@@ -67,7 +69,6 @@ func _ready() -> void:
 	if CraftingTimer != null:
 		add_child(CraftingTimer);
 		CraftingTimer.timeout.connect(finish_crafting);
-
 	return;
 
 
