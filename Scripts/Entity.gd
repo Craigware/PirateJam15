@@ -91,7 +91,7 @@ func update_health(amount) -> void:
 	$SpriteMesh.mesh.material.albedo_color = Color(modulation.x, modulation.y, modulation.z);
 
 	if Health <= 0:
-		if ItemDropID != null:
+		if ItemDropID != 0:
 			get_node("/root/main").add_item_to_inventory(Assets.Items[ItemDropID]);
 		entity_death.emit(EntityID);
 	return;
@@ -117,7 +117,7 @@ func apply_essence(item: Item) -> bool:
 
 func apply_card(item: Item) -> void:
 	if item.ItemID == Assets.ItemType.HEALTH_POTION:
-		update_health(5);
+		update_health(-100);
 	pass
 
 

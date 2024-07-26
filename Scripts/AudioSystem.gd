@@ -21,6 +21,7 @@ var Songs = [
 enum SoundEffectCatalog {
 	NIL
 }
+var Dead: bool = false;
 var SoundEffects = [];
 var AudioStreams = [];
 var current_index = 3
@@ -51,6 +52,11 @@ func _physics_process(_delta: float) -> void:
 			if AudioStreams[i] != null && AudioStreams[i].max_db < 3.0:
 				AudioStreams[i].max_db += 0.05;
 
+	if Dead:
+		for i in range(len(AudioStreams)):
+			if AudioStreams[i] != null && AudioStreams[i].max_db > 0.0:
+                AudioStreams[i].pitch_scale -= 0.01;
+				
 func switch_song():
 	current_index += 1;
 	if (current_index == SongCatalog.MAX):
@@ -59,6 +65,8 @@ func switch_song():
 	MusicPlayer.stream = Songs[current_index]
 	MusicPlayer.play();
 
+func Death():
+	Dead = true;
 
 func play_sound_effect(_sound: SoundEffectCatalog = SoundEffectCatalog.NIL) -> void:
 	var player = create_audiostream();

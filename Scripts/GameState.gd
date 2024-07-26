@@ -139,6 +139,7 @@ func create_entity() -> Entity:
 func remove_entity(entityId: int) -> void:
 	if entityId == 0:
 		player_failed();
+		get_node("/root/AudioSystem").Death();
 		print("PLAYER DEDGE");
 		return;
 
@@ -310,7 +311,6 @@ func update_cloud_state(_cloudState: CloudStates = CloudStates.NIL):
 func update_shadow_state():
 	var chance = randf_range(0,1);
 
-	# maybe if we just swap off of shadow we cannot see shadow again for a while
 	if CloudState == CloudStates.OVERCAST:
 		if chance < .80:
 			IsShadowed = true;
