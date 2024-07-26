@@ -51,11 +51,10 @@ func _physics_process(_delta: float) -> void:
 		for i in range(len(AudioStreams)):
 			if AudioStreams[i] != null && AudioStreams[i].max_db < 3.0:
 				AudioStreams[i].max_db += 0.05;
-
 	if Dead:
 		for i in range(len(AudioStreams)):
 			if AudioStreams[i] != null && AudioStreams[i].max_db > 0.0:
-                AudioStreams[i].pitch_scale -= 0.01;
+				AudioStreams[i].pitch_scale -= 0.01;
 				
 func switch_song():
 	current_index += 1;

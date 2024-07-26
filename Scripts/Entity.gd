@@ -11,7 +11,11 @@ enum EntityArchs {
 	PLAYER,
 	CAULDRON,
 	GHOUL,
-	PEDESTRIAN
+	VILLAGER,
+    GUARD,
+    VAMPIRE,
+    GOBLIN,
+    PIG
 }
 
 @export var Health: float;

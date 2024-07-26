@@ -88,7 +88,7 @@ func start_game() -> void:
 	Entities.fill(null);
 	create_player();
 	create_cauldron();
-	create_enemy(1);
+	create_enemy(Entity.EntityArchs.VAMPIRE);
 
 	DaylightTimer = Timer.new();
 	DaylightTimer.wait_time = 75;
@@ -213,31 +213,59 @@ func create_cauldron():
 	return;
 
 
-func create_enemy(_architype) -> bool:
-	var _entity = create_entity();
-	var resource_id = Assets.Sprites.GHOUL;
-	if resource_id > Assets.Images.size()-1: 
-		resource_id = Assets.Sprites.NIL;
+func create_enemy(_architype: Entity.EntityArchs) -> bool:
+	if _architype == Entity.EntityArchs.GHOUL:
+		var _entity = create_entity();
+		var resource_id = Assets.Sprites.GHOUL;
+		if resource_id > Assets.Images.size()-1: 
+			resource_id = Assets.Sprites.NIL;
 
-	_entity.Sprite = Assets.Images[resource_id];
-	_entity.Health = 10;
-	_entity.AttackRate = 3;
-	
-	_entity.EntityArch = Entity.EntityArchs.GHOUL;
-	_entity.IsAlly = false;
-	_entity.position = get_random_spawn_location(_entity.IsAlly);
+		_entity.Sprite = Assets.Images[resource_id];
+		_entity.Health = 10;
+		_entity.AttackRate = 3;
+		
+		_entity.EntityArch = Entity.EntityArchs.GHOUL;
+		_entity.IsAlly = false;
+		_entity.position = get_random_spawn_location(_entity.IsAlly);
 
-	_entity.MovePattern = Entity.MovementPattern.SWAY;
-	_entity.SwayArc = 0.05;
-	_entity.SwaySpeed = 0.1;
-	_entity.MeshSize = Vector2(2,3);
+		_entity.MovePattern = Entity.MovementPattern.SWAY;
+		_entity.SwayArc = 0.05;
+		_entity.SwaySpeed = 0.1;
+		_entity.MeshSize = Vector2(2,3);
 
-	_entity.AttackTimer = Timer.new();
-	_entity.AttackTimer.wait_time = _entity.AttackRate;
-	_entity.AttackTimer.autostart = true;
+		_entity.AttackTimer = Timer.new();
+		_entity.AttackTimer.wait_time = _entity.AttackRate;
+		_entity.AttackTimer.autostart = true;
 
-	EntityContainer.add_child(_entity);
-	return true;
+		EntityContainer.add_child(_entity);
+		return true;
+
+	if _architype == Entity.EntityArchs.VAMPIRE:
+		var _entity = create_entity();
+		var resource_id = Assets.Sprites.VAMPIRE;
+		if resource_id > Assets.Images.size()-1: 
+			resource_id = Assets.Sprites.NIL;
+
+		_entity.Sprite = Assets.Images[resource_id];
+		_entity.Health = 10;
+		_entity.AttackRate = 3;
+		
+		_entity.EntityArch = Entity.EntityArchs.VAMPIRE;
+		_entity.IsAlly = false;
+		_entity.position = get_random_spawn_location(_entity.IsAlly);
+
+		_entity.MovePattern = Entity.MovementPattern.SWAY;
+		_entity.SwayArc = 0.05;
+		_entity.SwaySpeed = 0.1;
+		_entity.MeshSize = Vector2(3,3.5);
+
+		_entity.AttackTimer = Timer.new();
+		_entity.AttackTimer.wait_time = _entity.AttackRate;
+		_entity.AttackTimer.autostart = true;
+
+		EntityContainer.add_child(_entity);
+		return true;
+	return false;
 
 func add_item_to_inventory(item: Item, amount: int = 1) -> bool:
 	if Inventory.has(item):
