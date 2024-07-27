@@ -38,10 +38,12 @@ var Inventory : Dictionary;
 var DayState : DayStates;
 var CloudState : CloudStates;
 var IsShadowed : bool;
+var Location : Background.SceneTypes;
 
 var DaylightTimer : Timer;
 var CloudStateTimer : Timer;
 var ShadowStateTimer : Timer;
+var EntitySpawnTimer : Timer;
 
 var AggrodArchitypes : Array = [
 	false,
@@ -49,6 +51,10 @@ var AggrodArchitypes : Array = [
 	false,
 	true,
 	false,
+	false,
+	true,
+	true,
+	false
 ];
 
 @onready var EntityContainer : Node = $EntityContainer;
@@ -69,10 +75,16 @@ func entity_ray_cast() -> Entity:
 
 func _process(_delta: float) -> void:
 	var _isCrafting = false;
+	var _villagerPresent = false;
 	for i in range(Entities.size()):
 		if Entities[i] == null: continue;
+		if Entities[i].EntityArch == Entity.EntityArchs.VILLAGER: _villagerPresent = true;
 		if Entities[i].IsAlly && Entities[i].IsCrafting:
 			_isCrafting = true;
+
+	if (_isCrafting && _villagerPresent):
+		AggrodArchitypes[Entity.EntityArchs.VILLAGER] = true;
+		AggrodArchitypes[Entity.EntityArchs.GUARD] = true;
 	pass
 
 func start_game() -> void:
@@ -80,8 +92,7 @@ func start_game() -> void:
 	Entities.fill(null);
 	create_player();
 	create_cauldron();
-	create_enemy(Entity.EntityArchs.VAMPIRE);
-	create_enemy(Entity.EntityArchs.VILLAGER);
+
 	DaylightTimer = Timer.new();
 	DaylightTimer.wait_time = 75;
 	DaylightTimer.timeout.connect(update_day_state);
@@ -113,6 +124,8 @@ func start_game() -> void:
 	add_item_to_inventory(Assets.Items[Assets.ItemType.ANIMAL_ESSENCE], 30);
 	add_item_to_inventory(Assets.Items[Assets.ItemType.HOLY_ESSENCE], 30);
 	add_item_to_inventory(Assets.Items[Assets.ItemType.UNDEAD_ESSENCE], 30);
+	create_enemy(DecideSpawnedEntity());
+	create_enemy(DecideSpawnedEntity());
 	return;
 
 
@@ -205,6 +218,7 @@ func create_cauldron():
 
 
 func create_enemy(_architype: Entity.EntityArchs) -> bool:
+	print(_architype);
 	if _architype == Entity.EntityArchs.GHOUL:
 		var _entity = create_entity();
 		var resource_id = Assets.Sprites.GHOUL;
@@ -388,3 +402,46 @@ func update_shadow_state():
 
 func player_failed() -> void:
 	return;
+
+# This is disgusting but there is no time to fix
+func DecideSpawnedEntity() -> Entity.EntityArchs:
+	var randomChance = randf_range(0,1);
+	if DayState == DayStates.DAWN:
+		if IsShadowed:
+			if randomChance < 0.05: return Entity.EntityArchs.VAMPIRE;
+			if randomChance < 0.4: return Entity.EntityArchs.GUARD;
+			if randomChance < 0.8: return Entity.EntityArchs.VILLAGER;
+			if randomChance < 1.0: return Entity.EntityArchs.PIG;
+		else:
+			if randomChance < 0.4: return Entity.EntityArchs.GUARD;
+			if randomChance < 0.8: return Entity.EntityArchs.VILLAGER;
+			if randomChance < 1.0: return Entity.EntityArchs.PIG;
+
+	if DayState == DayStates.DAY:
+		if IsShadowed:
+			if randomChance < 0.4: return Entity.EntityArchs.GUARD;
+			if randomChance < 0.8: return Entity.EntityArchs.VILLAGER;
+			if randomChance < 1.0: return Entity.EntityArchs.PIG;
+		else:
+			if randomChance < 0.4: return Entity.EntityArchs.GUARD;
+			if randomChance < 0.8: return Entity.EntityArchs.VILLAGER;
+			if randomChance < 1.0: return Entity.EntityArchs.PIG;
+
+	if DayState == DayStates.DUSK:
+		if IsShadowed:
+			if randomChance < 0.3: return Entity.EntityArchs.VAMPIRE;
+			if randomChance < 0.6: return Entity.EntityArchs.GHOUL;
+			if randomChance < 1.0: return Entity.EntityArchs.PIG;
+		else:
+			if randomChance < 0.1: return Entity.EntityArchs.VILLAGER;
+			if randomChance < 0.3: return Entity.EntityArchs.GUARD;
+			if randomChance < 0.6: return Entity.EntityArchs.VAMPIRE;
+			if randomChance < 0.9: return Entity.EntityArchs.GHOUL;
+			if randomChance < 1.0: return Entity.EntityArchs.PIG;
+
+	if DayState == DayStates.NIGHT:
+		if randomChance < 0.3: return Entity.EntityArchs.VAMPIRE;
+		if randomChance < 0.6: return Entity.EntityArchs.GHOUL;
+		if randomChance < 1.0: return Entity.EntityArchs.GOBLIN;
+
+	return Entity.EntityArchs.PIG;

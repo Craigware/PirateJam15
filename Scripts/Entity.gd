@@ -87,7 +87,7 @@ func _physics_process(delta: float) -> void:
 			direction *= -1;
 
 
-func update_health(amount) -> void:
+func update_health(amount, dropItem: bool = true) -> void:
 	Health += amount;
 	var color_update = 1 - Health / MaxHealth;
 	var modulation = Vector3(1,1,1);
@@ -96,7 +96,7 @@ func update_health(amount) -> void:
 	$SpriteMesh.mesh.material.albedo_color = Color(modulation.x, modulation.y, modulation.z);
 
 	if Health <= 0:
-		if ItemDropID != 0:
+		if ItemDropID != 0 && dropItem:
 			get_node("/root/main").add_item_to_inventory(Assets.Items[ItemDropID]);
 		entity_death.emit(EntityID);
 	return;

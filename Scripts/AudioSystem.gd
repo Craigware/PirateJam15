@@ -45,7 +45,7 @@ func _ready() -> void:
 func _physics_process(_delta: float) -> void:
 	if sounds_muffled:
 		for i in range(len(AudioStreams)):
-			if AudioStreams[i] != null && AudioStreams[i].max_db > -3.0:
+			if AudioStreams[i] != null && AudioStreams[i].max_db > -2.0:
 				AudioStreams[i].max_db -= 0.05;
 	if !sounds_muffled:
 		for i in range(len(AudioStreams)):

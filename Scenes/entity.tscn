@@ -30,6 +30,20 @@ subdivide_depth = 10
 [node name="Entity" type="StaticBody3D"]
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
 script = ExtResource("1_2vmc1")
+Health = null
+MaxHealth = null
+AttackDamage = null
+IsAlly = null
+IsAgressive = null
+MovePattern = null
+SwaySpeed = null
+SwayArc = null
+EntityArch = null
+ItemDropID = null
+IsCrafting = null
+MeshSize = null
+MeshOffset = null
+AttackRate = null
 
 [node name="Popscicle" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, 0)
