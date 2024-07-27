@@ -113,13 +113,6 @@ theme_override_font_sizes/normal_font_size = 64
 bbcode_enabled = true
 text = "[center]Game Over[/center]"
 
-[node name="DaysSurvived" type="RichTextLabel" parent="HUD/Menus/Center/MenuDisplay/GameOver"]
-custom_minimum_size = Vector2(0, 48)
-layout_mode = 2
-theme_override_font_sizes/normal_font_size = 32
-bbcode_enabled = true
-text = "[center]Game Over[/center]"
-
 [node name="GameOver2" type="RichTextLabel" parent="HUD/Menus/Center/MenuDisplay/GameOver"]
 custom_minimum_size = Vector2(0, 128)
 layout_mode = 2

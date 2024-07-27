@@ -33,7 +33,9 @@ enum EntityArchs {
 @export var MeshSize : Vector2 = Vector2(2,2);
 @export var MeshOffset : Vector3 = Vector3(0,0,0);
 @export var AttackRate : float = 0;
+@export var Aggrod : bool = false;
 
+var CraftingFailedCount : int = 0;
 var AppliedEssence : Dictionary = {};
 
 var AttackTimer : Timer;
@@ -97,7 +99,7 @@ func update_health(amount, dropItem: bool = true) -> void:
 
 	if Health <= 0:
 		if ItemDropID != 0 && dropItem:
-			get_node("/root/main").add_item_to_inventory(Assets.Items[ItemDropID]);
+			get_node("/root/Main").add_item_to_inventory(Assets.Items[ItemDropID]);
 		entity_death.emit(EntityID);
 	return;
 
@@ -154,6 +156,12 @@ func finish_crafting() -> void:
 			potential_items.append(i);	
 
 	if potential_items.size() == 0:
+		CraftingFailedCount += 1;
+		if CraftingFailedCount >= 3:
+			AppliedEssence = {}
+			IsCrafting = false;
+			$Smoke.visible = false;
+			return;
 		begin_crafting();
 		return;
 
@@ -184,17 +192,21 @@ func finish_crafting() -> void:
 	item = Assets.Items[potential_items[lowest]];
 	finished_crafting.emit(item);
 	
-	print(AppliedEssence);
 
 	var _recipe_keys = Assets.CraftingRecipes[potential_items[lowest]].keys();
 	for i in range(len(_recipe_keys)):
 		AppliedEssence[_recipe_keys[i]] -= Assets.CraftingRecipes[potential_items[lowest]][_recipe_keys[i]];
 		if AppliedEssence[_recipe_keys[i]] <= 0:
-			AppliedEssence.erase(keys[i]);
+			AppliedEssence.erase(_recipe_keys[i]);
 	
 	
-	print(AppliedEssence);
 	if AppliedEssence != {}:
+		CraftingFailedCount += 1;
+		if CraftingFailedCount >= 3:
+			AppliedEssence = {}
+			IsCrafting = false;
+			$Smoke.visible = false;
+			return;
 		begin_crafting();
 		return;
 	IsCrafting = false;

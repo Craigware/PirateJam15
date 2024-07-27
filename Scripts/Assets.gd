@@ -12,12 +12,12 @@ enum Sprites {
 };
 
 static var Images : Array = [
-	load("res://Assets/MissingTexture.png"),
-	load("res://Assets/Player.png"),
-	load("res://Assets/Cauldron.png"),
-	load("res://Assets/MissingTexture.png"),
-	load("res://Assets/Vampire.png"),
-	load("res://Assets/Villager.png"),
+	preload("res://Assets/MissingTexture.png"),
+	preload("res://Assets/Player.png"),
+	preload("res://Assets/Cauldron.png"),
+	preload("res://Assets/MissingTexture.png"),
+	preload("res://Assets/Vampire.png"),
+	preload("res://Assets/Villager.png"),
 ];
 
 enum ItemType {

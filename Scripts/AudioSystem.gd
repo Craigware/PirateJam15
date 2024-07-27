@@ -15,8 +15,8 @@ var Songs = [
 	load(""),
 	load(""),
 	load(""),
-	load("res://Assets/music/GameJam_Dusk_FINISHED.wav"),
-	load("res://Assets/music/GameJamNight_FINISHED.wav"),
+	preload("res://Assets/music/GameJam_Dusk_FINISHED.wav"),
+	preload("res://Assets/music/GameJamNight_FINISHED.wav"),
 ];
 enum SoundEffectCatalog {
 	NIL
@@ -27,7 +27,11 @@ var AudioStreams = [];
 var current_index = 3
 var override_index = 1;
 var sounds_muffled := false;
-func _ready() -> void:
+func restart() -> void:
+	Dead = false;
+	for i in range(get_child_count()):
+		remove_child(get_children()[0]);
+	AudioStreams = [];
 	AudioStreams.resize(MAX_SOUND_EFFECTS);
 	MusicPlayer = AudioStreamPlayer3D.new();
 	MusicPlayer.stream = Songs[current_index];
@@ -37,6 +41,7 @@ func _ready() -> void:
 	add_child(MusicPlayer);
 	AudioStreams[0] = MusicPlayer;
 	MusicPlayer.play();
+
 	
 	var sound_effects = Node.new();
 	sound_effects.name = "SoundEffects";
@@ -54,7 +59,7 @@ func _physics_process(_delta: float) -> void:
 	if Dead:
 		for i in range(len(AudioStreams)):
 			if AudioStreams[i] != null && AudioStreams[i].max_db > 0.0:
-				AudioStreams[i].pitch_scale -= 0.01;
+				AudioStreams[i].pitch_scale = move_toward(AudioStreams[i].pitch_scale, 0.01, 0.01);
 				
 func switch_song():
 	current_index += 1;

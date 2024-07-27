@@ -30,15 +30,17 @@ enum CloudStates {
 const ENTITY_LIMIT = 128;
 
 var Entities : Array;
-var PS_Entity : PackedScene = load("res://Scenes/entity.tscn");
-var PS_Card : PackedScene = load("res://Scenes/card.tscn");
-var PS_Essence : PackedScene = load("res://Scenes/essence.tscn");
+var PS_Entity : PackedScene = preload("res://Scenes/entity.tscn");
+var PS_Card : PackedScene = preload("res://Scenes/card.tscn");
+var PS_Essence : PackedScene = preload("res://Scenes/essence.tscn");
 var Player : Entity;
 var Inventory : Dictionary;
 var DayState : DayStates;
 var CloudState : CloudStates;
 var IsShadowed : bool;
 var Location : Background.SceneTypes;
+var CurrentDay : int = 0;
+var RecentlyShadowed : bool = false;
 
 var DaylightTimer : Timer;
 var CloudStateTimer : Timer;
@@ -88,6 +90,7 @@ func _process(_delta: float) -> void:
 	pass
 
 func start_game() -> void:
+	$"/root/AudioSystem".restart();
 	Entities.resize(ENTITY_LIMIT);
 	Entities.fill(null);
 	create_player();
@@ -107,10 +110,17 @@ func start_game() -> void:
 	add_child(CloudStateTimer);
 
 	ShadowStateTimer = Timer.new();
-	ShadowStateTimer.wait_time = 3;
+	ShadowStateTimer.wait_time = 5;
 	ShadowStateTimer.autostart = true;
 	ShadowStateTimer.timeout.connect(update_shadow_state);
 	add_child(ShadowStateTimer);
+
+	EntitySpawnTimer = Timer.new();
+	EntitySpawnTimer.wait_time = 5;
+	EntitySpawnTimer.autostart = true;
+	EntitySpawnTimer.one_shot = true;
+	EntitySpawnTimer.timeout.connect(spawn_timer_tick);
+	add_child(EntitySpawnTimer);
 
 	update_cloud_state(CloudStates.CLEAR);
 	IsShadowed = false;
@@ -225,6 +235,8 @@ func create_enemy(_architype: Entity.EntityArchs) -> bool:
 		if resource_id > Assets.Images.size()-1: 
 			resource_id = Assets.Sprites.NIL;
 
+		_entity.ItemDropID = Assets.ItemType.UNDEAD_ESSENCE;
+
 		_entity.Sprite = Assets.Images[resource_id];
 		_entity.Health = 10;
 		_entity.AttackRate = 3;
@@ -251,6 +263,8 @@ func create_enemy(_architype: Entity.EntityArchs) -> bool:
 		if resource_id > Assets.Images.size()-1: 
 			resource_id = Assets.Sprites.NIL;
 
+		_entity.ItemDropID = Assets.ItemType.UNDEAD_ESSENCE;
+
 		_entity.Sprite = Assets.Images[resource_id];
 		_entity.Health = 10;
 		_entity.AttackRate = 3;
@@ -276,6 +290,9 @@ func create_enemy(_architype: Entity.EntityArchs) -> bool:
 		var resource_id = Assets.Sprites.VILLAGER;
 		if resource_id > Assets.Images.size()-1: 
 			resource_id = Assets.Sprites.NIL;
+
+		_entity.ItemDropID = Assets.ItemType.COMMON_ESSENCE;
+		_entity.Aggrod = AggrodArchitypes[Assets.Sprites.VILLAGER]
 
 		_entity.Sprite = Assets.Images[resource_id];
 		_entity.Health = 10;
@@ -348,6 +365,7 @@ func update_day_state(_dayState: DayStates = DayStates.NIL):
 	if (_dayState == DayStates.NIL):
 		if updatedState == DayStates.MAX - 1:
 			updatedState = DayStates.DAWN;
+			CurrentDay += 1;
 		else:
 			updatedState = DayState + 1 as DayStates;
 	else:
@@ -369,31 +387,39 @@ func update_cloud_state(_cloudState: CloudStates = CloudStates.NIL):
 
 
 func update_shadow_state():
-	var chance = randf_range(0,1);
+	if RecentlyShadowed == true:
+		RecentlyShadowed = false;
+		return;
 
+	var chance = randf_range(0,1);
+	var isShadowed;
 	if CloudState == CloudStates.OVERCAST:
 		if chance < .80:
-			IsShadowed = true;
+			isShadowed = true;
 		else:
-			IsShadowed = false;
+			isShadowed = false;
 	
 	if CloudState == CloudStates.CLOUDY:
 		if chance < .50:
-			IsShadowed = true;
+			isShadowed = true;
 		else:
-			IsShadowed = false;
+			isShadowed = false;
 
 	if CloudState == CloudStates.CLEAR:
 		if chance < .05:
-			IsShadowed = true;
+			isShadowed = true;
 		else:
-			IsShadowed = false;
+			isShadowed = false;
 
-	if IsShadowed:
+	if isShadowed:
+		IsShadowed = true;
 		$Shadow.visible = true;
 		if !get_node("/root/AudioSystem").sounds_muffled:
 			get_node("/root/AudioSystem").muffle_sounds();
 	else:
+		if IsShadowed == true:
+			RecentlyShadowed = true;
+		IsShadowed = false;
 		$Shadow.visible = false;
 		if get_node("/root/AudioSystem").sounds_muffled:
 			get_node("/root/AudioSystem").muffle_sounds();
@@ -401,6 +427,8 @@ func update_shadow_state():
 	print("Shadow state updated. Is it currently shadowed? ", IsShadowed);
 
 func player_failed() -> void:
+	$HUD/Menus/Center/MenuDisplay/GameOver.visible = true;
+	$HUD/Menus/Center/MenuDisplay/GameOver/DaysSurvived.text = "[center]Days Survived: " + str(CurrentDay);
 	return;
 
 # This is disgusting but there is no time to fix
@@ -445,3 +473,10 @@ func DecideSpawnedEntity() -> Entity.EntityArchs:
 		if randomChance < 1.0: return Entity.EntityArchs.GOBLIN;
 
 	return Entity.EntityArchs.PIG;
+
+func spawn_timer_tick() -> bool:
+	var EntityArch = DecideSpawnedEntity();
+	create_enemy(EntityArch);
+	EntitySpawnTimer.wait_time = 5;
+	EntitySpawnTimer.start();
+	return true;
