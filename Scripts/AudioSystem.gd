@@ -13,7 +13,7 @@ enum SongCatalog {
 }
 var Songs = [
 	load(""),
-	load(""),
+	load("res://Assets/music/GameJamDawn_FINISHED.wav"),
 	load(""),
 	preload("res://Assets/music/GameJam_Dusk_FINISHED.wav"),
 	preload("res://Assets/music/GameJamNight_FINISHED.wav"),
