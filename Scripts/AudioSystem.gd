@@ -24,7 +24,7 @@ enum SoundEffectCatalog {
 var Dead: bool = false;
 var SoundEffects = [];
 var AudioStreams = [];
-var current_index = 3
+var current_index = 1;
 var override_index = 1;
 var sounds_muffled := false;
 func restart() -> void:
@@ -74,7 +74,6 @@ func Death():
 
 func play_sound_effect(_sound: SoundEffectCatalog = SoundEffectCatalog.NIL) -> void:
 	var player = create_audiostream();
-	# player.stream  = SoundEffects[sound];
 	player.bus = "SoundEffects";
 	$SoundEffects.add_child(player);
 	

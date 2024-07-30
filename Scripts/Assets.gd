@@ -43,10 +43,12 @@ static var Items : Array = [
 	Item.new("Animal Essence", Images[Sprites.NIL], Item.ItemTypes.ESSENCE, ItemType.ANIMAL_ESSENCE),
 	Item.new("Holy Essence", Images[Sprites.NIL], Item.ItemTypes.ESSENCE, ItemType.HOLY_ESSENCE),
 	Item.new("Void Essence", Images[Sprites.NIL], Item.ItemTypes.ESSENCE, ItemType.VOID_ESSENCE),
-	Item.new("Health Potion", Images[Sprites.NIL], Item.ItemTypes.CARD, ItemType.HEALTH_POTION),
+	
+    Item.new("Health Potion", Images[Sprites.NIL], Item.ItemTypes.CARD, ItemType.HEALTH_POTION),
 	Item.new("Greater Health Potion", Images[Sprites.NIL], Item.ItemTypes.CARD, ItemType.GREATER_HEALTH_POTION),
 	Item.new("MAGIC KNIFE", Images[Sprites.NIL], Item.ItemTypes.CARD, ItemType.MAGIC_KNIFE),
-	Item.new("Slashy", Images[Sprites.NIL], Item.ItemTypes.CARD, ItemType.SLASHY),
+	
+    Item.new("Slashy", Images[Sprites.NIL], Item.ItemTypes.SPECIAL, ItemType.SLASHY),
 	# Item.new("", Images[Sprites.NIL], Item.ItemTypes.CARD, ItemType.HEALTH_POTION),
 	# Item.new("", Images[Sprites.NIL], Item.ItemTypes.CARD, ItemType.HEALTH_POTION),
 	# Item.new("", Images[Sprites.NIL], Item.ItemTypes.CARD, ItemType.HEALTH_POTION),

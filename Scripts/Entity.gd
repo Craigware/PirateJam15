@@ -38,6 +38,7 @@ enum EntityArchs {
 var CraftingFailedCount : int = 0;
 var AppliedEssence : Dictionary = {};
 
+var LeaveTimer : Timer;
 var AttackTimer : Timer;
 var EntityID : int;
 signal entity_death(entity_id: int);
@@ -71,6 +72,9 @@ func _ready() -> void:
 	if CraftingTimer != null:
 		add_child(CraftingTimer);
 		CraftingTimer.timeout.connect(finish_crafting);
+
+	if LeaveTimer != null:
+		add_child(LeaveTimer);
 	return;
 
 
@@ -96,7 +100,12 @@ func update_health(amount, dropItem: bool = true) -> void:
 	modulation.y -= color_update;
 	modulation.z -= color_update;
 	$SpriteMesh.mesh.material.albedo_color = Color(modulation.x, modulation.y, modulation.z);
-
+	var particle = get_node("Particles") as CPUParticles3D;
+	if amount < 0:
+		particle.mesh.material.albedo_texture = Assets.Images[Assets.Sprites.NIL];
+	else:
+		pass
+	particle.emitting = true;
 	if Health <= 0:
 		if ItemDropID != 0 && dropItem:
 			get_node("/root/Main").add_item_to_inventory(Assets.Items[ItemDropID]);
@@ -105,8 +114,33 @@ func update_health(amount, dropItem: bool = true) -> void:
 
 
 func attack() -> void:
-	#### NEEDS WORK!!!
-	pass;
+	var gamestate = get_node("/root/Main") as GameState;
+	var target;
+	for i in range(len(gamestate.Entities)):
+		if gamestate.Entities[i] == null: continue;
+		if gamestate.Entities[i].IsAlly != IsAlly && gamestate.AggrodArchitypes[EntityArch] == true:
+			target = gamestate.Entities[i];
+			break;
+
+	match (EntityArch):
+		EntityArchs.PLAYER:
+			target.update_health(-2)
+		
+		EntityArchs.VILLAGER:
+			if gamestate.AggrodArchitypes[EntityArchs.VILLAGER]:
+				target.update_health(-2);
+		
+		EntityArchs.VAMPIRE:
+			target.update_health(-4);
+
+		EntityArchs.GUARD:
+			if (gamestate.AggrodArchitypes[EntityArchs.GUARD]):
+				target.update_health(-6);
+
+		_:
+			pass
+
+	#attack based of this units type
 
 func apply_essence(item: Item) -> bool:
 	# Change this later if decide to be able to apply essence to creatures
@@ -123,10 +157,19 @@ func apply_essence(item: Item) -> bool:
 
 
 func apply_card(item: Item) -> void:
-	if item.ItemID == Assets.ItemType.HEALTH_POTION:
-		update_health(-100);
-	pass
+	var particle = get_node("Particles") as CPUParticles3D;
+	match (item.ItemID):
+		Assets.ItemType.HEALTH_POTION:
+			update_health(5);
+			particle.mesh.material.albedo_texture = Assets.Images[Assets.Sprites.NIL];
 
+		Assets.ItemType.GREATER_HEALTH_POTION:
+			update_health(10);
+
+		Assets.ItemType.MAGIC_KNIFE:
+			update_health(-10);
+	
+	particle.emitting = true;
 
 func begin_crafting() -> void:
 	$Smoke.visible = true;
@@ -215,5 +258,9 @@ func finish_crafting() -> void:
 
 
 func die() -> void:
-	queue_free();
+	var timer = Timer.new();
+	timer.wait_time = 1; 
+	add_child(timer)
+	timer.start();
+	timer.timeout.connect(queue_free);
 	return;

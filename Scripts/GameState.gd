@@ -84,7 +84,7 @@ func _process(_delta: float) -> void:
 		if Entities[i].IsAlly && Entities[i].IsCrafting:
 			_isCrafting = true;
 
-	if (_isCrafting && _villagerPresent):
+	if (_isCrafting && _villagerPresent && !IsShadowed):
 		AggrodArchitypes[Entity.EntityArchs.VILLAGER] = true;
 		AggrodArchitypes[Entity.EntityArchs.GUARD] = true;
 	pass
@@ -124,7 +124,7 @@ func start_game() -> void:
 
 	update_cloud_state(CloudStates.CLEAR);
 	IsShadowed = false;
-	update_day_state(DayStates.DUSK);
+	update_day_state(DayStates.DAWN);
 	$DaylightCycle.DayCycleTimer = DaylightTimer.wait_time;
 	$DaylightCycle.started = true;
 
@@ -311,6 +311,11 @@ func create_enemy(_architype: Entity.EntityArchs) -> bool:
 		_entity.AttackTimer = Timer.new();
 		_entity.AttackTimer.wait_time = _entity.AttackRate;
 		_entity.AttackTimer.autostart = true;
+
+		_entity.LeaveTimer = Timer.new();
+		_entity.LeaveTimer.wait_time = randi_range(3,8);
+		_entity.LeaveTimer.autostart = true;
+		_entity.LeaveTimer.timeout.connect(remove_entity.bind(_entity.EntityID));
 
 		EntityContainer.add_child(_entity);
 		return true;
