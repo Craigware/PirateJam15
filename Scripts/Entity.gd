@@ -34,7 +34,7 @@ enum EntityArchs {
 @export var MeshOffset : Vector3 = Vector3(0,0,0);
 @export var AttackRate : float = 0;
 @export var Aggrod : bool = false;
-
+var Dead : bool = false;
 var CraftingFailedCount : int = 0;
 var AppliedEssence : Dictionary = {};
 
@@ -64,6 +64,7 @@ func _ready() -> void:
 	$Col.shape.size.x = MeshSize.x;
 	
 	startingY = position.y;
+	position.y -= 1;
 
 	if AttackTimer != null:
 		add_child(AttackTimer);
@@ -77,17 +78,24 @@ func _ready() -> void:
 		add_child(LeaveTimer);
 	return;
 
-
+var enterCompleted = false;
 func _physics_process(delta: float) -> void:
 	#Implement more human movement later, more imperfections
 	#lerp this later
+	if !enterCompleted:
+		position.y = clamp(position.y + 0.5 * delta, position.y, startingY);
+		if position.y >= startingY: enterCompleted = true;
+	
+	if Dead:
+		position.y -=  1 * delta;
+
 	if MovePattern == MovementPattern.SWAY:
 		rotate_z(SwaySpeed * delta * direction);
 		if rotation.z >= SwayArc or rotation.z <= -SwayArc:
 			direction *= -1
 
 	# This gets stuck sometimes for some reason
-	if MovePattern == MovementPattern.BOUNCE:
+	if MovePattern == MovementPattern.BOUNCE && enterCompleted:
 		position += Vector3(0, SwaySpeed * delta * direction, 0);
 		if position.y >= startingY + SwayArc or position.y <= startingY - SwayArc:
 			direction *= -1;
@@ -103,8 +111,10 @@ func update_health(amount, dropItem: bool = true) -> void:
 	var particle = get_node("Particles") as CPUParticles3D;
 	if amount < 0:
 		particle.mesh.material.albedo_texture = Assets.Images[Assets.Sprites.NIL];
+		get_node("/root/AudioSystem").play_sound_effect(AudioSystem.SoundEffectCatalog.AH);
 	else:
-		pass
+		particle.mesh.material.albedo_texture = Assets.Images[Assets.Sprites.NIL];
+		get_node("/root/AudioSystem").play_sound_effect(AudioSystem.SoundEffectCatalog.MM);
 	particle.emitting = true;
 	if Health <= 0:
 		if ItemDropID != 0 && dropItem:
@@ -185,6 +195,7 @@ func finish_crafting() -> void:
 	# Gets the lowest difference that isn't -1000
 	var item = null;
 	var keys = AppliedEssence.keys();
+	print(CraftingFailedCount);
 
 	# logic error here 
 	var potential_items = [];
@@ -201,9 +212,11 @@ func finish_crafting() -> void:
 	if potential_items.size() == 0:
 		CraftingFailedCount += 1;
 		if CraftingFailedCount >= 3:
+			CraftingFailedCount = 0;
 			AppliedEssence = {}
 			IsCrafting = false;
 			$Smoke.visible = false;
+			get_node("/root/AudioSystem").play_sound_effect(AudioSystem.SoundEffectCatalog.PWOSH);
 			return;
 		begin_crafting();
 		return;
@@ -234,6 +247,7 @@ func finish_crafting() -> void:
 	
 	item = Assets.Items[potential_items[lowest]];
 	finished_crafting.emit(item);
+	get_node("/root/AudioSystem").play_sound_effect(AudioSystem.SoundEffectCatalog.PLING, 1.3, 1.5);
 	
 
 	var _recipe_keys = Assets.CraftingRecipes[potential_items[lowest]].keys();
@@ -246,9 +260,11 @@ func finish_crafting() -> void:
 	if AppliedEssence != {}:
 		CraftingFailedCount += 1;
 		if CraftingFailedCount >= 3:
+			CraftingFailedCount = 0;
 			AppliedEssence = {}
 			IsCrafting = false;
 			$Smoke.visible = false;
+			get_node("/root/AudioSystem").play_sound_effect(AudioSystem.SoundEffectCatalog.PWOSH);
 			return;
 		begin_crafting();
 		return;
@@ -258,7 +274,9 @@ func finish_crafting() -> void:
 
 
 func die() -> void:
+	get_node("/root/Main").Entities[EntityID] = null;
 	var timer = Timer.new();
+	Dead = true;
 	timer.wait_time = 1; 
 	add_child(timer)
 	timer.start();

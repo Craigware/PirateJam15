@@ -19,12 +19,23 @@ var Songs = [
 	preload("res://Assets/music/GameJamNight_FINISHED.wav"),
 ];
 enum SoundEffectCatalog {
-	NIL
+	NIL,
+	AH,
+	PLING,
+	PWOSH,
+	MM,
+	MAX
 }
 var Dead: bool = false;
-var SoundEffects = [];
+var SoundEffects = [
+	preload("res://Assets/sounds/AH.wav"),
+	preload("res://Assets/sounds/AH.wav"),
+	preload("res://Assets/sounds/Pling.wav"),
+	preload("res://Assets/sounds/Pwosh.wav"),
+	preload("res://Assets/sounds/MM.wav"),
+];
 var AudioStreams = [];
-var current_index = 1;
+var current_index = 3;
 var override_index = 1;
 var sounds_muffled := false;
 func restart() -> void:
@@ -62,6 +73,7 @@ func _physics_process(_delta: float) -> void:
 				AudioStreams[i].pitch_scale = move_toward(AudioStreams[i].pitch_scale, 0.01, 0.01);
 				
 func switch_song():
+	print("?");
 	current_index += 1;
 	if (current_index == SongCatalog.MAX):
 		current_index = 1;
@@ -70,12 +82,16 @@ func switch_song():
 	MusicPlayer.play();
 
 func Death():
+	print("???");
 	Dead = true;
 
-func play_sound_effect(_sound: SoundEffectCatalog = SoundEffectCatalog.NIL) -> void:
+func play_sound_effect(_sound: SoundEffectCatalog = SoundEffectCatalog.NIL, pitchMin = 0.5, pitchMax = 1.5) -> void:
 	var player = create_audiostream();
 	player.bus = "SoundEffects";
+	player.stream = SoundEffects[_sound];
+	player.pitch_scale = randf_range(pitchMin,pitchMax);
 	$SoundEffects.add_child(player);
+	player.play();
 	
 
 func muffle_sounds() -> void:

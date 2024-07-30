@@ -153,7 +153,6 @@ func create_entity() -> Entity:
 func remove_entity(entityId: int) -> void:
 	if entityId == 0:
 		player_failed();
-		get_node("/root/AudioSystem").Death();
 		print("PLAYER DEDGE");
 		return;
 
@@ -315,7 +314,7 @@ func create_enemy(_architype: Entity.EntityArchs) -> bool:
 		_entity.LeaveTimer = Timer.new();
 		_entity.LeaveTimer.wait_time = randi_range(3,8);
 		_entity.LeaveTimer.autostart = true;
-		_entity.LeaveTimer.timeout.connect(remove_entity.bind(_entity.EntityID));
+		_entity.LeaveTimer.timeout.connect(_entity.die);
 
 		EntityContainer.add_child(_entity);
 		return true;
@@ -432,6 +431,7 @@ func update_shadow_state():
 	print("Shadow state updated. Is it currently shadowed? ", IsShadowed);
 
 func player_failed() -> void:
+	get_node("/root/AudioSystem").Death();
 	$HUD/Menus/Center/MenuDisplay/GameOver.visible = true;
 	$HUD/Menus/Center/MenuDisplay/GameOver/DaysSurvived.text = "[center]Days Survived: " + str(CurrentDay);
 	return;
