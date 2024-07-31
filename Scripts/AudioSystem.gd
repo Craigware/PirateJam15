@@ -13,10 +13,10 @@ enum SongCatalog {
 }
 var Songs = [
 	load(""),
-	load("res://Assets/music/GameJamDawn_FINISHED.wav"),
-	load(""),
-	preload("res://Assets/music/GameJam_Dusk_FINISHED.wav"),
-	preload("res://Assets/music/GameJamNight_FINISHED.wav"),
+	load("res://Assets/music/GJ_Dawn_Final.wav"),
+	load("res://Assets/music/GJ_Day_Final.wav"),
+	preload("res://Assets/music/GJ_Dusk_Final.wav"),
+	preload("res://Assets/music/GJ_Night_Final.wav"),
 ];
 enum SoundEffectCatalog {
 	NIL,

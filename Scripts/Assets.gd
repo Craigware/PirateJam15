@@ -8,6 +8,13 @@ enum Sprites {
 	GHOUL,
 	VAMPIRE,
 	VILLAGER,
+	GOBLIN,
+	GUARD,
+	PIG,
+	POTION,
+	UNDEAD_ESSENCE,
+	COMMON_ESSENCE,
+	ANIMAL_ESSENCE,
 	MAX
 };
 
@@ -18,6 +25,13 @@ static var Images : Array = [
 	preload("res://Assets/MissingTexture.png"),
 	preload("res://Assets/Vampire.png"),
 	preload("res://Assets/Villager.png"),
+	preload("res://Assets/Goblin.png"),
+	preload("res://Assets/Knight.png"),
+	preload("res://Assets/Pig.png"),
+	preload("res://Assets/Potion.png"),
+	preload("res://Assets/UndeadEssence.png"),
+	preload("res://Assets/commonessence.png"),
+	preload("res://Assets/animalessence.png")
 ];
 
 enum ItemType {
@@ -38,17 +52,17 @@ enum ItemType {
 static var Items : Array = [
 	Item.new("NIL ITEM NOT FOUND", Images[Sprites.NIL], Item.ItemTypes.ESSENCE, ItemType.NIL),
 	Item.new("Herbal Essence", Images[Sprites.NIL], Item.ItemTypes.ESSENCE, ItemType.HERBAL_ESSENCE),
-	Item.new("Common Essence", Images[Sprites.NIL], Item.ItemTypes.ESSENCE, ItemType.COMMON_ESSENCE),
-	Item.new("Undead Essence", Images[Sprites.NIL], Item.ItemTypes.ESSENCE, ItemType.UNDEAD_ESSENCE),
-	Item.new("Animal Essence", Images[Sprites.NIL], Item.ItemTypes.ESSENCE, ItemType.ANIMAL_ESSENCE),
+	Item.new("Common Essence", Images[Sprites.COMMON_ESSENCE], Item.ItemTypes.ESSENCE, ItemType.COMMON_ESSENCE),
+	Item.new("Undead Essence", Images[Sprites.UNDEAD_ESSENCE], Item.ItemTypes.ESSENCE, ItemType.UNDEAD_ESSENCE),
+	Item.new("Animal Essence", Images[Sprites.ANIMAL_ESSENCE], Item.ItemTypes.ESSENCE, ItemType.ANIMAL_ESSENCE),
 	Item.new("Holy Essence", Images[Sprites.NIL], Item.ItemTypes.ESSENCE, ItemType.HOLY_ESSENCE),
 	Item.new("Void Essence", Images[Sprites.NIL], Item.ItemTypes.ESSENCE, ItemType.VOID_ESSENCE),
 	
-    Item.new("Health Potion", Images[Sprites.NIL], Item.ItemTypes.CARD, ItemType.HEALTH_POTION),
-	Item.new("Greater Health Potion", Images[Sprites.NIL], Item.ItemTypes.CARD, ItemType.GREATER_HEALTH_POTION),
+	Item.new("Health Potion", Images[Sprites.POTION], Item.ItemTypes.CARD, ItemType.HEALTH_POTION),
+	Item.new("Greater Health Potion", Images[Sprites.POTION], Item.ItemTypes.CARD, ItemType.GREATER_HEALTH_POTION),
 	Item.new("MAGIC KNIFE", Images[Sprites.NIL], Item.ItemTypes.CARD, ItemType.MAGIC_KNIFE),
 	
-    Item.new("Slashy", Images[Sprites.NIL], Item.ItemTypes.SPECIAL, ItemType.SLASHY),
+	Item.new("Slashy", Images[Sprites.NIL], Item.ItemTypes.SPECIAL, ItemType.SLASHY),
 	# Item.new("", Images[Sprites.NIL], Item.ItemTypes.CARD, ItemType.HEALTH_POTION),
 	# Item.new("", Images[Sprites.NIL], Item.ItemTypes.CARD, ItemType.HEALTH_POTION),
 	# Item.new("", Images[Sprites.NIL], Item.ItemTypes.CARD, ItemType.HEALTH_POTION),

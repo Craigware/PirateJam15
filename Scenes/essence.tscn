@@ -4,7 +4,6 @@
 
 [node name="Slot" type="Button"]
 custom_minimum_size = Vector2(64, 64)
-anchors_preset = -1
 offset_right = 64.0
 offset_bottom = 64.0
 script = ExtResource("1_mty6d")
@@ -33,6 +32,7 @@ theme_override_constants/margin_bottom = 2
 
 [node name="Icon" type="TextureRect" parent="MarginContainer"]
 layout_mode = 2
+expand_mode = 2
 
 [node name="Amount" type="RichTextLabel" parent="."]
 layout_mode = 0

@@ -81,6 +81,8 @@ func _process(_delta: float) -> void:
 	for i in range(Entities.size()):
 		if Entities[i] == null: continue;
 		if Entities[i].EntityArch == Entity.EntityArchs.VILLAGER: _villagerPresent = true;
+		if Entities[i].EntityArch == Entity.EntityArchs.GUARD: _villagerPresent = true;
+
 		if Entities[i].IsAlly && Entities[i].IsCrafting:
 			_isCrafting = true;
 
@@ -132,10 +134,9 @@ func start_game() -> void:
 	
 	add_item_to_inventory(Assets.Items[Assets.ItemType.COMMON_ESSENCE], 30);
 	add_item_to_inventory(Assets.Items[Assets.ItemType.ANIMAL_ESSENCE], 30);
-	add_item_to_inventory(Assets.Items[Assets.ItemType.HOLY_ESSENCE], 30);
 	add_item_to_inventory(Assets.Items[Assets.ItemType.UNDEAD_ESSENCE], 30);
 	create_enemy(DecideSpawnedEntity());
-	create_enemy(DecideSpawnedEntity());
+	create_enemy(Entity.EntityArchs.GHOUL);
 	return;
 
 
@@ -191,6 +192,11 @@ func create_player() -> bool:
 	_entity.SwayArc = 0.15;
 	_entity.SwaySpeed = 0.2;
 	_entity.MeshSize = Vector2(2,3);
+	_entity.AttackRate = 3;
+
+	_entity.AttackTimer = Timer.new();
+	_entity.AttackTimer.wait_time = _entity.AttackRate;
+	_entity.AttackTimer.autostart = true;
 
 	EntityContainer.add_child(_entity);
 	return true;
@@ -230,7 +236,7 @@ func create_enemy(_architype: Entity.EntityArchs) -> bool:
 	print(_architype);
 	if _architype == Entity.EntityArchs.GHOUL:
 		var _entity = create_entity();
-		var resource_id = Assets.Sprites.GHOUL;
+		var resource_id = Assets.Sprites.GOBLIN;
 		if resource_id > Assets.Images.size()-1: 
 			resource_id = Assets.Sprites.NIL;
 
@@ -247,7 +253,8 @@ func create_enemy(_architype: Entity.EntityArchs) -> bool:
 		_entity.MovePattern = Entity.MovementPattern.SWAY;
 		_entity.SwayArc = 0.05;
 		_entity.SwaySpeed = 0.1;
-		_entity.MeshSize = Vector2(2,3);
+		_entity.MeshSize = Vector2(2,2);
+		_entity.MeshOffset = Vector3(0.4,0,0);
 
 		_entity.AttackTimer = Timer.new();
 		_entity.AttackTimer.wait_time = _entity.AttackRate;
@@ -318,6 +325,66 @@ func create_enemy(_architype: Entity.EntityArchs) -> bool:
 
 		EntityContainer.add_child(_entity);
 		return true;
+	
+	if _architype == Entity.EntityArchs.PIG:
+		var _entity = create_entity();
+		var resource_id = Assets.Sprites.PIG;
+		if resource_id > Assets.Images.size()-1: 
+			resource_id = Assets.Sprites.NIL;
+
+		_entity.ItemDropID = Assets.ItemType.ANIMAL_ESSENCE;
+
+		_entity.Sprite = Assets.Images[resource_id];
+		_entity.Health = 10;
+		_entity.AttackRate = 3;
+		
+		_entity.EntityArch = Entity.EntityArchs.PIG;
+		_entity.IsAlly = false;
+		_entity.position = get_random_spawn_location(_entity.IsAlly);
+
+		_entity.MovePattern = Entity.MovementPattern.SWAY;
+		_entity.SwayArc = 0.05;
+		_entity.SwaySpeed = 0.1;
+		_entity.MeshSize = Vector2(2,2);
+		# _entity.MeshOffset = Vector3(0.4,0,0)
+
+		EntityContainer.add_child(_entity);
+		return true;
+
+	if _architype == Entity.EntityArchs.GUARD:
+		var _entity = create_entity();
+		var resource_id = Assets.Sprites.GUARD;
+		if resource_id > Assets.Images.size()-1: 
+			resource_id = Assets.Sprites.NIL;
+
+		_entity.ItemDropID = Assets.ItemType.COMMON_ESSENCE;
+
+		_entity.Sprite = Assets.Images[resource_id];
+		_entity.Health = 10;
+		_entity.AttackRate = 3;
+		
+		_entity.EntityArch = Entity.EntityArchs.GUARD;
+		_entity.IsAlly = false;
+		_entity.position = get_random_spawn_location(_entity.IsAlly);
+
+		_entity.MovePattern = Entity.MovementPattern.SWAY;
+		_entity.SwayArc = 0.05;
+		_entity.SwaySpeed = 0.1;
+		_entity.MeshSize = Vector2(1.75,3);
+
+		_entity.AttackTimer = Timer.new();
+		_entity.AttackTimer.wait_time = _entity.AttackRate;
+		_entity.AttackTimer.autostart = true;
+
+		if !AggrodArchitypes[Entity.EntityArchs.GUARD]:
+			_entity.LeaveTimer = Timer.new();
+			_entity.LeaveTimer.wait_time = randi_range(3,8);
+			_entity.LeaveTimer.autostart = true;
+			_entity.LeaveTimer.timeout.connect(_entity.die);
+
+		EntityContainer.add_child(_entity);
+		return true;
+
 	return false;
 
 func add_item_to_inventory(item: Item, amount: int = 1) -> bool:
@@ -416,6 +483,9 @@ func update_shadow_state():
 			isShadowed = false;
 
 	if isShadowed:
+		if AggrodArchitypes[Entity.EntityArchs.VILLAGER]:
+			AggrodArchitypes[Entity.EntityArchs.GUARD] = false;
+			AggrodArchitypes[Entity.EntityArchs.VILLAGER] = false;
 		IsShadowed = true;
 		$Shadow.visible = true;
 		if !get_node("/root/AudioSystem").sounds_muffled:
@@ -474,8 +544,8 @@ func DecideSpawnedEntity() -> Entity.EntityArchs:
 
 	if DayState == DayStates.NIGHT:
 		if randomChance < 0.3: return Entity.EntityArchs.VAMPIRE;
-		if randomChance < 0.6: return Entity.EntityArchs.GHOUL;
-		if randomChance < 1.0: return Entity.EntityArchs.GOBLIN;
+		if randomChance < 1.0: return Entity.EntityArchs.GHOUL;
+		# if randomChance < 1.0: return Entity.EntityArchs.GOBLIN;
 
 	return Entity.EntityArchs.PIG;
 

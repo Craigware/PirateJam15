@@ -134,7 +134,8 @@ func attack() -> void:
 
 	match (EntityArch):
 		EntityArchs.PLAYER:
-			target.update_health(-2)
+			if target != null:
+				target.update_health(-2)
 		
 		EntityArchs.VILLAGER:
 			if gamestate.AggrodArchitypes[EntityArchs.VILLAGER]:
@@ -178,6 +179,8 @@ func apply_card(item: Item) -> void:
 
 		Assets.ItemType.MAGIC_KNIFE:
 			update_health(-10);
+	
+
 	
 	particle.emitting = true;
 

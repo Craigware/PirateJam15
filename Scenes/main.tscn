@@ -150,13 +150,6 @@ size_flags_vertical = 4
 theme_override_styles/pressed = SubResource("StyleBoxFlat_qx5d0")
 text = "Play	"
 
-[node name="MenuButton3" type="Button" parent="HUD/Menus/Center/MenuDisplay/MainMenu"]
-custom_minimum_size = Vector2(320, 0)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-text = "Setting"
-
 [node name="MenuButton4" type="Button" parent="HUD/Menus/Center/MenuDisplay/MainMenu"]
 custom_minimum_size = Vector2(320, 0)
 layout_mode = 2
